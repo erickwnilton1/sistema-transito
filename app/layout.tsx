@@ -17,6 +17,34 @@ export const metadata: Metadata = {
   title: "Boletim de Sinistro de Trânsito",
   description:
     "Boletim de Sinistro de Trânsito - Autarquia Municipal de Trânsito e Transportes",
+  icons: {
+    icon: ["/logo-amttrans.png"],
+  },
+  keywords: [
+    "trânsito",
+    "boletim de ocorrência",
+    "agentes de trânsito",
+    "AMTTRANS",
+    "Prefeitura do Ipojuca",
+    "gestão municipal",
+    "sistema de trânsito",
+  ],
+  openGraph: {
+    title: "Boletim de Sinistro de Trânsito",
+    description: "Gerencie boletins de ocorrência de forma rápida e eficiente.",
+    url: "",
+    siteName: "Boletim de Sinistro de Trânsito",
+    images: [
+      {
+        url: "/logo-amttrans.png",
+        width: 500,
+        height: 500,
+        alt: "Logo AMTTRANS",
+      },
+    ],
+    locale: "pt_BR",
+    type: "website",
+  },
 };
 
 export default function RootLayout({
