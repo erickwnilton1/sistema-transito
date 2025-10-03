@@ -8,5 +8,11 @@ export default function LogoutButton() {
     await authClient.signOut();
     router.push("/");
   }
-  return <button onClick={handleLogout}>Sair</button>;
+  return (
+    <div className="flex items-center justify-center w-[50px] h-[40px] rounded-2xl m-1 bg-red-500 hover:bg-red-600 cursor-pointer">
+      <button onClick={handleLogout} className="text-white m-2">
+        Sair
+      </button>
+    </div>
+  );
 }
