@@ -100,7 +100,7 @@ export default function HomePage() {
 
           <form
             onSubmit={handleSubmit}
-            className="w-full max-w-md space-y-4 p-6 border rounded mx-auto bg-white"
+            className="w-full max-w-md space-y-4 p-6 border rounded-2xl mx-auto bg-white shadow-lg"
           >
             <h2 className="text-2xl font-semibold text-blue-950 mb-6 text-center">
               {mode === "signup" ? "Cadastro" : "Login"}
