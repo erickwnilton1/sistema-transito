@@ -28,7 +28,7 @@ export default async function BoletimPage() {
         <div className="flex flex-1 flex-col">
           <header className="flex items-center justify-between border-b p-4 bg-blue-950 shadow-sm">
             <div className="flex items-center gap-3">
-              <SidebarTrigger />
+              <SidebarTrigger className="text-white" />
               <h1 className="text-xl font-bold text-white">
                 Boletim de Sinistro de Trânsito
               </h1>
