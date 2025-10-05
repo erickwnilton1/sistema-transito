@@ -69,10 +69,10 @@ model Verification {
 
 model Boletim {
   id          Int      @id @default(autoincrement())
-  protocol    String   @unique
+  protocol    String?  @unique
   data        Json
   observation String?
-  criadoEm    DateTime @default(now())
+  createdAt   DateTime @default(now())
   agentId     String
   agent       User     @relation(fields: [agentId], references: [id], onDelete: Cascade)
 
