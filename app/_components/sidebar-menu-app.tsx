@@ -15,22 +15,27 @@ import {
 export default function SidebarMenuApp() {
   const pathname = usePathname();
 
-  const menuItems = [
+  const mainItems = [
     { name: "Boletim", icon: Home, href: "/boletim" },
-    { name: "Histórico", icon: FileText, href: "/historico" },
-    { name: "Orientações", icon: ThumbsUp, href: "/orientacoes" },
-    { name: "Suporte", icon: Settings, href: "/suporte" },
+    { name: "Histórico", icon: FileText, href: "/historico-sistema" },
+    { name: "Orientações", icon: ThumbsUp, href: "/orientacao-sistema" },
   ];
 
+  const supportItem = {
+    name: "Suporte",
+    icon: Settings,
+    href: "/suporte-sistema",
+  };
+
   return (
-    <SidebarContent className="p-4 bg-blue-950">
-      <SidebarGroup>
+    <SidebarContent className="p-4 bg-blue-950 flex flex-col h-full">
+      <SidebarGroup className="flex-1">
         <SidebarGroupLabel className="text-2xl font-semibold text-white mb-5">
           Menu
         </SidebarGroupLabel>
         <SidebarGroupContent>
           <SidebarMenu className="mt-2 space-y-2">
-            {menuItems.map((item) => {
+            {mainItems.map((item) => {
               const Icon = item.icon;
               const isActive = pathname === item.href;
 
@@ -53,6 +58,16 @@ export default function SidebarMenuApp() {
           </SidebarMenu>
         </SidebarGroupContent>
       </SidebarGroup>
+
+      <SidebarMenuItem className="flex items-center gap-2 cursor-pointer px-3 py-2 rounded-md transition-all mt-auto bg-blue-800 text-white hover:bg-blue-800/20">
+        <Link
+          href={supportItem.href}
+          className="flex items-center gap-2 w-full"
+        >
+          <supportItem.icon className="h-4 w-4" />
+          {supportItem.name}
+        </Link>
+      </SidebarMenuItem>
     </SidebarContent>
   );
 }
