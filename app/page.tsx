@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
+import toast from "react-hot-toast";
 import { User, Mail, CreditCard, Lock } from "lucide-react";
 import Image from "next/image";
 
@@ -14,10 +15,12 @@ export default function HomePage() {
     registration: "",
     password: "",
   });
-  const [mode, setMode] = useState<"signin" | "signup">("signup");
+  const [mode, setMode] = useState<"signin" | "signup">("signin");
+  const [loading, setLoading] = useState(false);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    setLoading(true);
 
     try {
       if (mode === "signup") {
@@ -30,18 +33,24 @@ export default function HomePage() {
         });
 
         if (error) throw error;
+
+        toast.success("Cadastro realizado com sucesso!");
       } else {
         const { data, error } = await authClient.signIn.email({
           email: form.email,
           password: form.password,
         });
-
         if (error) throw error;
+
+        toast.success("✅ Login realizado com sucesso!");
       }
 
       router.push("/boletim");
     } catch (err: any) {
-      alert(err?.message || "Erro no auth");
+      console.error("Erro no auth:", err);
+      toast.error("Erro ao autenticar o usuário.");
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -55,7 +64,6 @@ export default function HomePage() {
           className="object-cover"
           priority
         />
-
         <div className="absolute inset-0 flex flex-col items-center justify-center text-center text-white bg-black/30">
           <img src="/logo-amttrans.png" alt="Logo" className="w-32 mb-4" />
           <h1 className="text-3xl md:text-4xl font-bold">
@@ -106,18 +114,21 @@ export default function HomePage() {
               {mode === "signup" ? "Cadastro" : "Login"}
             </h2>
 
-            <div className="relative w-full">
-              <User
-                className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
-                size={20}
-              />
-              <input
-                placeholder="Nome"
-                value={form.name}
-                onChange={(e) => setForm({ ...form, name: e.target.value })}
-                className="w-full border p-2 pl-10 rounded"
-              />
-            </div>
+            {mode === "signup" && (
+              <div className="relative w-full">
+                <User
+                  className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+                  size={20}
+                />
+                <input
+                  placeholder="Nome"
+                  value={form.name}
+                  onChange={(e) => setForm({ ...form, name: e.target.value })}
+                  className="w-full border p-2 pl-10 rounded"
+                  required
+                />
+              </div>
+            )}
 
             <div className="relative w-full">
               <Mail
@@ -129,23 +140,27 @@ export default function HomePage() {
                 value={form.email}
                 onChange={(e) => setForm({ ...form, email: e.target.value })}
                 className="w-full border p-2 pl-10 rounded"
+                required
               />
             </div>
 
-            <div className="relative w-full">
-              <CreditCard
-                className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
-                size={20}
-              />
-              <input
-                placeholder="Matrícula"
-                value={form.registration}
-                onChange={(e) =>
-                  setForm({ ...form, registration: e.target.value })
-                }
-                className="w-full border p-2 pl-10 rounded"
-              />
-            </div>
+            {mode === "signup" && (
+              <div className="relative w-full">
+                <CreditCard
+                  className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+                  size={20}
+                />
+                <input
+                  placeholder="Matrícula"
+                  value={form.registration}
+                  onChange={(e) =>
+                    setForm({ ...form, registration: e.target.value })
+                  }
+                  className="w-full border p-2 pl-10 rounded"
+                  required
+                />
+              </div>
+            )}
 
             <div className="relative w-full">
               <Lock
@@ -158,14 +173,22 @@ export default function HomePage() {
                 value={form.password}
                 onChange={(e) => setForm({ ...form, password: e.target.value })}
                 className="w-full border p-2 pl-10 rounded"
+                required
               />
             </div>
 
             <button
               type="submit"
-              className="w-full bg-blue-900 text-white p-2 rounded cursor-pointer hover:bg-blue-950"
+              disabled={loading}
+              className={`w-full bg-blue-900 text-white p-2 rounded cursor-pointer hover:bg-blue-950 transition ${
+                loading ? "opacity-20 cursor-not-allowed" : ""
+              }`}
             >
-              {mode === "signup" ? "Cadastrar" : "Entrar"}
+              {loading
+                ? "Processando..."
+                : mode === "signup"
+                  ? "Cadastrar"
+                  : "Entrar"}
             </button>
 
             <p className="text-sm text-center">
@@ -173,7 +196,7 @@ export default function HomePage() {
               <button
                 type="button"
                 onClick={() => setMode(mode === "signup" ? "signin" : "signup")}
-                className="ml-2 underline"
+                className="ml-2 underline text-blue-900"
               >
                 {mode === "signup" ? "Entrar" : "Criar conta"}
               </button>
