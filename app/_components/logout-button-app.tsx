@@ -10,7 +10,7 @@ export default function LogoutButton() {
   }
   return (
     <div className="flex items-center justify-center w-[50px] h-[40px] rounded-2xl m-1 bg-red-500 hover:bg-red-600 cursor-pointer">
-      <button onClick={handleLogout} className="text-white m-2">
+      <button onClick={handleLogout} className="text-white m-2 cursor-pointer">
         Sair
       </button>
     </div>

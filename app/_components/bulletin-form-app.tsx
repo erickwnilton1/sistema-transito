@@ -121,10 +121,12 @@ export default function BoletimForm() {
 
   return (
     <div className="flex justify-center py-8 px-4 w-full">
-      <Card className="w-full max-w-[60%]">
+      <Card className="w-full max-w-[90%]">
         <CardHeader>
-          <CardTitle className="flex items-center bg-blue-950 p-5 rounded-2xl gap-2">
-            <p className="text-white">Boletim de Sinistro</p>
+          <CardTitle className="flex flex-col sm:flex-row items-center bg-blue-950 p-5 rounded-2xl gap-2 text-white">
+            <p className="text-lg sm:text-xl font-semibold">
+              Boletim de Sinistro
+            </p>
             <p className="p-2 rounded-2xl bg-yellow-500 text-white uppercase">
               Amttrans
             </p>
@@ -149,7 +151,7 @@ export default function BoletimForm() {
               <div>
                 <label className="block mb-1">Ponto de Referência</label>
                 <Input
-                  placeholder="Ex.: Próximo ao supermercado X"
+                  placeholder="Ex.: Próximo ao supermercado"
                   {...register("pontoReferencia")}
                 />
               </div>
@@ -219,11 +221,19 @@ export default function BoletimForm() {
               </div>
               <div>
                 <label className="block mb-1">Número de Não Fatais</label>
-                <Input type="number" {...register("naoFatais")} />
+                <Input
+                  type="number"
+                  placeholder="Ex.: 1"
+                  {...register("naoFatais")}
+                />
               </div>
               <div>
                 <label className="block mb-1">Número de Fatais</label>
-                <Input type="number" {...register("fatais")} />
+                <Input
+                  type="number"
+                  placeholder="Ex.: 2"
+                  {...register("fatais")}
+                />
               </div>
 
               <h2 className="font-semibold text-lg mt-4">Condições</h2>
@@ -467,7 +477,7 @@ export default function BoletimForm() {
                           <SelectContent>
                             {[
                               "NORMAL",
-                              "SOB_EST AFA",
+                              "SOB_ESTAFA",
                               "SOB_TOXICO",
                               "ALCOOLIZADO",
                             ].map((n) => (
@@ -544,7 +554,7 @@ export default function BoletimForm() {
                   </div>
 
                   {/* Infrações */}
-                  <div className="mt-4">
+                  <div className="mt-4 space-y-2">
                     <h4 className="font-semibold mb-2">Infrações</h4>
                     <Input
                       placeholder="Código da Infração"
