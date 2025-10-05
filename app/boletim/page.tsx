@@ -7,6 +7,7 @@ import {
 } from "@/components/ui/sidebar";
 import SidebarMenuApp from "@/app/_components/sidebar-menu-app";
 import BoletimForm from "../_components/bulletin-form-app";
+import AcessoNegadoPage from "../acesso-negado/page";
 
 export default async function BoletimPage() {
   const session = await auth.api.getSession({
@@ -14,7 +15,7 @@ export default async function BoletimPage() {
   });
 
   if (!session?.user) {
-    return <p className="p-8 text-red-500">Acesso negado. Faça login.</p>;
+    return <AcessoNegadoPage />;
   }
 
   return (
