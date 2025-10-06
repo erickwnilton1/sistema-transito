@@ -3,18 +3,20 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
-import toast from "react-hot-toast";
 import { User, Mail, CreditCard, Lock } from "lucide-react";
+import toast from "react-hot-toast";
 import Image from "next/image";
 
 export default function HomePage() {
   const router = useRouter();
+
   const [form, setForm] = useState({
     name: "",
     email: "",
     registration: "",
     password: "",
   });
+
   const [mode, setMode] = useState<"signin" | "signup">("signin");
   const [loading, setLoading] = useState(false);
 
@@ -32,23 +34,41 @@ export default function HomePage() {
           callbackURL: "/boletim",
         });
 
-        if (error) throw error;
+        if (error) {
+          console.error("Erro no signup:", error);
+          toast.error(
+            (error as any)?.message ||
+              JSON.stringify(error) ||
+              "Erro ao cadastrar o usuário."
+          );
+          return;
+        }
 
         toast.success("Cadastro realizado com sucesso!");
+        router.push("/boletim");
       } else {
         const { data, error } = await authClient.signIn.email({
           email: form.email,
           password: form.password,
         });
-        if (error) throw error;
+
+        if (error) {
+          console.error("Erro no signin:", error);
+          toast.error(
+            (error as any)?.message ||
+              JSON.stringify(error) ||
+              "Erro ao autenticar o usuário."
+          );
+
+          return;
+        }
 
         toast.success("✅ Login realizado com sucesso!");
+        router.push("/boletim");
       }
-
-      router.push("/boletim");
     } catch (err: any) {
-      console.error("Erro no auth:", err);
-      toast.error("Erro ao autenticar o usuário.");
+      console.error("Erro inesperado no auth:", err);
+      toast.error("Ocorreu um erro inesperado. Tente novamente.");
     } finally {
       setLoading(false);
     }
