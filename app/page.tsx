@@ -1,11 +1,13 @@
 "use client";
 
+import axios from "axios";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
 import { User, Mail, CreditCard, Lock } from "lucide-react";
 import toast from "react-hot-toast";
 import Image from "next/image";
+import { validateRegistration } from "@/lib/registrations";
 
 export default function HomePage() {
   const router = useRouter();
@@ -26,6 +28,28 @@ export default function HomePage() {
 
     try {
       if (mode === "signup") {
+        // Validates if registration is on the list of authorized agents
+        const isValid = validateRegistration(form.registration);
+
+        if (!isValid) {
+          toast.error("Matrícula não registrada no sistema.");
+          setLoading(false);
+          return;
+        }
+
+        // Check if the registration is already registered
+        const { data: existingUser } = await axios.post("/api/check-user", {
+          registration: form.registration,
+        });
+
+        if (existingUser.exists) {
+          toast.error("Essa matrícula já está cadastrada. Faça login.");
+          router.push("/");
+          setLoading(false);
+          return;
+        }
+
+        // Register
         const { data, error } = await authClient.signUp.email({
           email: form.email,
           password: form.password,
@@ -35,31 +59,23 @@ export default function HomePage() {
         });
 
         if (error) {
-          console.error("Erro no signup:", error);
-          toast.error(
-            (error as any)?.message ||
-              JSON.stringify(error) ||
-              "Erro ao cadastrar o usuário."
-          );
+          console.error("Erro no cadastro:", error);
+          toast.error("Erro ao cadastrar o usuário.");
           return;
         }
 
         toast.success("Cadastro realizado com sucesso!");
         router.push("/boletim");
       } else {
+        // Login
         const { data, error } = await authClient.signIn.email({
           email: form.email,
           password: form.password,
         });
 
         if (error) {
-          console.error("Erro no signin:", error);
-          toast.error(
-            (error as any)?.message ||
-              JSON.stringify(error) ||
-              "Erro ao autenticar o usuário."
-          );
-
+          console.error("Erro no login:", error);
+          toast.error("Erro ao autenticar. Verifique suas credenciais.");
           return;
         }
 
@@ -67,7 +83,7 @@ export default function HomePage() {
         router.push("/boletim");
       }
     } catch (err: any) {
-      console.error("Erro inesperado no auth:", err);
+      console.error("Erro inesperado:", err);
       toast.error("Ocorreu um erro inesperado. Tente novamente.");
     } finally {
       setLoading(false);
