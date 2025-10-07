@@ -1,7 +1,9 @@
 "use client";
-
-import { useForm, useFieldArray, Controller } from "react-hook-form";
+import axios from "axios";
+import { toast } from "react-hot-toast";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { useForm, useFieldArray, Controller } from "react-hook-form";
 import {
   Select,
   SelectContent,
@@ -9,9 +11,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { toast } from "react-hot-toast";
 
 interface Infracao {
   codigoInfracao: string;
@@ -69,7 +69,6 @@ interface BoletimFormData {
   naoFatais: string;
   fatais: string;
   natureza: string;
-  sinistroVerificado: string;
   condicaoVia: string;
   conservacaoVia: string;
   condicaoTempo: string;
@@ -83,7 +82,7 @@ interface BoletimFormData {
 }
 
 export default function BoletimForm() {
-  const { register, control, handleSubmit } = useForm<BoletimFormData>({
+  const { register, control, handleSubmit, reset } = useForm<BoletimFormData>({
     defaultValues: { veiculos: [] },
   });
 
@@ -91,11 +90,6 @@ export default function BoletimForm() {
     control,
     name: "veiculos",
   });
-
-  const onSubmit = (data: BoletimFormData) => {
-    console.log("Dados do formulário:", data);
-    toast.success("Boletim registrado com sucesso!");
-  };
 
   const tiposVeiculo = [
     "AUTOMOVEL",
@@ -119,6 +113,29 @@ export default function BoletimForm() {
     "OUTROS",
   ];
 
+  const onSubmit = async (data: BoletimFormData) => {
+    try {
+      const sessionResponse = await axios.get("/api/session");
+      const agentId = sessionResponse.data.user?.id;
+
+      if (!agentId) {
+        toast.error("Usuário não autenticado.");
+        return;
+      }
+
+      const payload = { data: { ...data, agentId } };
+      const response = await axios.post("/api/boletim", payload);
+
+      toast.success(
+        `Boletim salvo com sucesso! Protocolo: ${response.data.protocol}`
+      );
+      reset({ veiculos: [] });
+    } catch (err: any) {
+      console.error("Erro ao salvar boletim:", err);
+      toast.error("Erro ao salvar boletim. Tente novamente.");
+    }
+  };
+
   return (
     <div className="flex justify-center py-8 px-4 w-full">
       <Card className="w-full max-w-[90%]">
@@ -134,7 +151,6 @@ export default function BoletimForm() {
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-            {/* Localização */}
             <div className="space-y-4">
               <h2 className="font-semibold text-lg">Localização</h2>
               <div>
@@ -157,7 +173,6 @@ export default function BoletimForm() {
               </div>
             </div>
 
-            {/* Horário */}
             <div className="space-y-4">
               <h2 className="font-semibold text-lg">Horário</h2>
               <div>
@@ -166,39 +181,22 @@ export default function BoletimForm() {
               </div>
               <div>
                 <label className="block mb-1">Hora da Ocorrência</label>
-                <Input
-                  type="time"
-                  placeholder="HH:MM"
-                  {...register("horaOcorrencia")}
-                />
+                <Input type="time" {...register("horaOcorrencia")} />
               </div>
               <div>
                 <label className="block mb-1">Chegada do Agente</label>
-                <Input
-                  type="time"
-                  placeholder="HH:MM"
-                  {...register("horaChegadaAgente")}
-                />
+                <Input type="time" {...register("horaChegadaAgente")} />
               </div>
               <div>
                 <label className="block mb-1">Liberação da Via</label>
-                <Input
-                  type="time"
-                  placeholder="HH:MM"
-                  {...register("horaLiberacaoVia")}
-                />
+                <Input type="time" {...register("horaLiberacaoVia")} />
               </div>
               <div>
                 <label className="block mb-1">Término da Ocorrência</label>
-                <Input
-                  type="time"
-                  placeholder="HH:MM"
-                  {...register("terminoOcorrencia")}
-                />
+                <Input type="time" {...register("terminoOcorrencia")} />
               </div>
             </div>
 
-            {/* Classificação e Condições */}
             <div className="space-y-4">
               <h2 className="font-semibold text-lg">Classificação</h2>
               <div>
@@ -221,21 +219,15 @@ export default function BoletimForm() {
               </div>
               <div>
                 <label className="block mb-1">Número de Não Fatais</label>
-                <Input
-                  type="number"
-                  placeholder="Ex.: 1"
-                  {...register("naoFatais")}
-                />
+                <Input type="number" {...register("naoFatais")} />
               </div>
               <div>
                 <label className="block mb-1">Número de Fatais</label>
-                <Input
-                  type="number"
-                  placeholder="Ex.: 2"
-                  {...register("fatais")}
-                />
+                <Input type="number" {...register("fatais")} />
               </div>
+            </div>
 
+            <div className="space-y-4">
               <h2 className="font-semibold text-lg mt-4">Condições</h2>
               <div>
                 <label className="block mb-1">Natureza do Acidente</label>
@@ -293,7 +285,6 @@ export default function BoletimForm() {
               </div>
             </div>
 
-            {/* Veículos */}
             <div className="space-y-4 mt-6">
               <h2 className="font-semibold text-lg">Veículos Envolvidos</h2>
               <Button
@@ -397,7 +388,6 @@ export default function BoletimForm() {
                     </div>
                   </div>
 
-                  {/* Condutor */}
                   <div className="mt-4">
                     <h4 className="font-semibold mb-2">Condutor</h4>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
@@ -522,7 +512,6 @@ export default function BoletimForm() {
                     </div>
                   </div>
 
-                  {/* Proprietário */}
                   <div className="mt-4">
                     <h4 className="font-semibold mb-2">Proprietário</h4>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
@@ -553,7 +542,6 @@ export default function BoletimForm() {
                     </div>
                   </div>
 
-                  {/* Infrações */}
                   <div className="mt-4 space-y-2">
                     <h4 className="font-semibold mb-2">Infrações</h4>
                     <Input
