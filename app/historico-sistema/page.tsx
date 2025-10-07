@@ -63,7 +63,7 @@ export default function HistoricoPage() {
                     key={b.id}
                     className="bg-white shadow-md border rounded-xl"
                   >
-                    <CardHeader className="flex justify-between items-center">
+                    <CardHeader className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-2">
                       <CardTitle className="text-lg font-bold">
                         Protocolo:{" "}
                         <span className="bg-blue-950 text-white px-2 py-1 rounded">

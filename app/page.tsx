@@ -63,7 +63,7 @@ export default function HomePage() {
           return;
         }
 
-        toast.success("✅ Login realizado com sucesso!");
+        toast.success("Login realizado com sucesso!");
         router.push("/boletim");
       }
     } catch (err: any) {
