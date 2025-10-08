@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-
 import "./globals.css";
 import { Toaster } from "react-hot-toast";
 
@@ -20,34 +19,15 @@ export const metadata: Metadata = {
     "Boletim de Sinistro de Trânsito - Autarquia Municipal de Trânsito e Transportes",
   icons: {
     icon: ["/logo-amttrans.png"],
-  },
-  keywords: [
-    "trânsito",
-    "boletim de ocorrência",
-    "agentes de trânsito",
-    "AMTTRANS",
-    "Prefeitura do Ipojuca",
-    "gestão municipal",
-    "sistema de trânsito",
-  ],
-  openGraph: {
-    title: "Boletim de Sinistro de Trânsito",
-    description: "Gerencie boletins de ocorrência de forma rápida e eficiente.",
-    url: "",
-    siteName: "Boletim de Sinistro de Trânsito",
-    images: [
-      {
-        url: "/logo-amttrans.png",
-        width: 500,
-        height: 500,
-        alt: "Logo AMTTRANS",
-      },
-    ],
-    locale: "pt_BR",
-    type: "website",
+    apple: "/icons/icon-512x512.png",
   },
   manifest: "/manifest.json",
   themeColor: "#0a0a0a",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: "Boletim de Sinistro",
+  },
 };
 
 export default function RootLayout({
@@ -56,7 +36,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="pt-BR">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
