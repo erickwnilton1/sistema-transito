@@ -8,6 +8,7 @@ import {
 import SidebarMenuApp from "@/app/_components/sidebar-menu-app";
 import BoletimForm from "../_components/bulletin-form-app";
 import AcessoNegadoPage from "../acesso-negado/page";
+import { redirect } from "next/navigation";
 
 export default async function BoletimPage() {
   const session = await auth.api.getSession({
@@ -15,7 +16,7 @@ export default async function BoletimPage() {
   });
 
   if (!session?.user) {
-    return <AcessoNegadoPage />;
+    redirect("/acesso-negado");
   }
 
   return (

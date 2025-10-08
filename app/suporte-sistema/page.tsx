@@ -7,9 +7,10 @@ import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { Mail, Phone, Headphones, ArrowLeft } from "lucide-react";
 import { motion } from "framer-motion";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
+import { auth } from "@/lib/auth";
 
-export default function SuportePage() {
+export default async function SuportePage() {
   const router = useRouter();
 
   return (

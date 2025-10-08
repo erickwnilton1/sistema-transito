@@ -7,8 +7,18 @@ import {
 } from "@/components/ui/sidebar";
 import SidebarMenuApp from "../_components/sidebar-menu-app";
 import LogoutButton from "../_components/logout-button-app";
+import { auth } from "@/lib/auth";
+import { redirect } from "next/navigation";
 
-export default function SuportePage() {
+export default async function SuportePage() {
+  const session = await auth.api.getSession({
+    headers: await (await import("next/headers")).headers(),
+  });
+
+  if (!session?.user) {
+    redirect("/acesso-negado");
+  }
+
   const topicos = [
     {
       titulo: "Acesso ao Sistema",

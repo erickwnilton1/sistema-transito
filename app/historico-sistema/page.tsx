@@ -13,11 +13,21 @@ import {
   Sidebar,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
+import { auth } from "@/lib/auth";
+import { redirect } from "next/navigation";
 
-export default function HistoricoPage() {
+export default async function HistoricoPage() {
   const [boletins, setBoletins] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedBoletim, setSelectedBoletim] = useState<any | null>(null);
+
+  const session = await auth.api.getSession({
+    headers: await (await import("next/headers")).headers(),
+  });
+
+  if (!session?.user) {
+    redirect("/acesso-negado");
+  }
 
   useEffect(() => {
     const fetchBoletins = async () => {
