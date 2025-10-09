@@ -101,13 +101,25 @@ export default function HistoricoClient() {
                         <strong>Não Fatais:</strong> {b.naoFatais}
                       </p>
                     </CardContent>
-                    <div className="flex justify-end p-4">
+                    <div className="flex justify-end p-4 gap-2">
                       <Button
                         size="sm"
                         variant="outline"
                         onClick={() => setSelectedBoletim(b)}
                       >
                         Visualizar Detalhes
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="bg-blue-900 text-white cursor-p hover:bg-blue-800 hover:text-white"
+                      >
+                        <a
+                          href="/pdf-condutor/declaracao-condutor.pdf"
+                          download="Declaracao_Condutor.pdf"
+                        >
+                          Gerar Declaração do Condutor
+                        </a>
                       </Button>
                     </div>
                   </Card>
