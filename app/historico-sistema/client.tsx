@@ -101,7 +101,7 @@ export default function HistoricoClient() {
                         <strong>Não Fatais:</strong> {b.naoFatais}
                       </p>
                     </CardContent>
-                    <div className="flex justify-end p-4 gap-2">
+                    <div className="flex flex-col lg:flex-row justify-end p-4 gap-2">
                       <Button
                         size="sm"
                         variant="outline"
@@ -116,7 +116,7 @@ export default function HistoricoClient() {
                       >
                         <a
                           href="/pdf-condutor/declaracao-condutor.pdf"
-                          download="Declaracao_Condutor.pdf"
+                          target="_blank"
                         >
                           Gerar Declaração do Condutor
                         </a>

@@ -647,7 +647,10 @@ export default function BoletimForm() {
               ))}
             </div>
 
-            <Button type="submit" className="w-full bg-blue-900">
+            <Button
+              type="submit"
+              className="w-full bg-blue-900 hover:bg-blue-950"
+            >
               Salvar Boletim
             </Button>
           </form>
