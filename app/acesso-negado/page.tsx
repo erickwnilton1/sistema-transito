@@ -51,7 +51,7 @@ export default function AcessoNegadoPage() {
       </motion.div>
 
       <footer className="mt-8 text-slate-500 text-sm">
-        © {new Date().getFullYear()} — Definir nome para empresa
+        © {new Date().getFullYear()} — Nuxt
       </footer>
     </div>
   );

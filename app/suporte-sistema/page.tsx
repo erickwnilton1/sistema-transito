@@ -7,8 +7,7 @@ import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { Mail, Phone, Headphones, ArrowLeft } from "lucide-react";
 import { motion } from "framer-motion";
-import { redirect, useRouter } from "next/navigation";
-import { auth } from "@/lib/auth";
+import { useRouter } from "next/navigation";
 
 export default async function SuportePage() {
   const router = useRouter();
@@ -38,8 +37,8 @@ export default async function SuportePage() {
           <CardContent className="flex flex-col items-center gap-4">
             <Avatar className="h-30 w-30">
               <AvatarImage
-                src="/imagem-suporte.jpg"
-                alt="suporte técnico"
+                src="/logo-nuxt.png"
+                alt="NUXT"
                 className="object-cover"
               />
               <AvatarFallback>SP</AvatarFallback>
@@ -63,7 +62,7 @@ export default async function SuportePage() {
               <div className="flex items-center gap-2">
                 <Mail className="w-5 h-5 text-blue-400" />
                 <span className="text-slate-300 text-sm">
-                  suporte@sistema.gov.br
+                  nuxt.hub@gmail.com
                 </span>
               </div>
             </div>
@@ -80,7 +79,7 @@ export default async function SuportePage() {
 
               <Button
                 onClick={() =>
-                  (window.location.href = "mailto:suporte@sistema.gov.br")
+                  (window.location.href = "mailto:nuxt.hub@gmail.com")
                 }
                 className="bg-blue-500 hover:bg-blue-600"
               >
@@ -91,7 +90,7 @@ export default async function SuportePage() {
         </Card>
 
         <footer className="mt-8 text-slate-500 text-sm text-center">
-          © {new Date().getFullYear()} — Definir nome para empresa
+          © {new Date().getFullYear()} — Nuxt
         </footer>
       </motion.div>
     </div>

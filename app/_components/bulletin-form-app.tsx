@@ -1,9 +1,11 @@
 "use client";
+
 import axios from "axios";
 import { toast } from "react-hot-toast";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useForm, useFieldArray, Controller } from "react-hook-form";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Select,
   SelectContent,
@@ -11,7 +13,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 interface Infracao {
   codigoInfracao: string;
@@ -65,18 +66,37 @@ interface BoletimFormData {
   tipoClassificacao: string;
   natureza: string;
   condicaoVia: string;
+  vitimasFatais: number;
+  vitimasNaoFatais: number;
   veiculos: Veiculo[];
 }
 
-export default function BoletimForm() {
+interface BoletimFormProps {
+  initialData?: BoletimFormData;
+}
+
+export default function BoletimForm({ initialData }: BoletimFormProps) {
   const {
     register,
     control,
     handleSubmit,
     reset,
-    formState: { errors },
+    formState: { errors, isValid },
   } = useForm<BoletimFormData>({
-    defaultValues: { veiculos: [] },
+    mode: "onChange",
+    defaultValues: initialData || {
+      rua: "",
+      bairro: "",
+      pontoReferencia: "",
+      dataOcorrencia: "",
+      horaOcorrencia: "",
+      tipoClassificacao: "",
+      natureza: "",
+      condicaoVia: "",
+      vitimasFatais: 0,
+      vitimasNaoFatais: 0,
+      veiculos: [],
+    },
   });
 
   const { fields, append, remove } = useFieldArray({
@@ -111,6 +131,61 @@ export default function BoletimForm() {
       return;
     }
 
+    for (const [i, veiculo] of data.veiculos.entries()) {
+      if (
+        !veiculo.tipoVeiculo ||
+        !veiculo.marca ||
+        !veiculo.modelo ||
+        !veiculo.cor ||
+        !veiculo.ano ||
+        !veiculo.placaVeiculo ||
+        !veiculo.municipio ||
+        !veiculo.uf ||
+        !veiculo.chassi ||
+        !veiculo.renavam ||
+        !veiculo.velocidadeEstimada
+      ) {
+        toast.error(`Preencha todos os campos do veículo ${i + 1}`);
+        return;
+      }
+
+      const c = veiculo.condutor;
+      if (
+        !c.nomeCondutor ||
+        !c.sexo ||
+        !c.idade ||
+        !c.rg ||
+        !c.cnh ||
+        !c.categoriaCNH ||
+        !c.registroCNH ||
+        !c.validadeCNH ||
+        !c.usavaCapaceteCinto ||
+        !c.aparencia ||
+        !c.comportamento ||
+        !c.testeEtilometro
+      ) {
+        toast.error(`Preencha todos os campos do condutor do veículo ${i + 1}`);
+        return;
+      }
+
+      const p = veiculo.proprietario;
+      if (!p.nomeProprietario || !p.cpfCnpj || !p.enderecoProprietario) {
+        toast.error(
+          `Preencha todos os campos do proprietário do veículo ${i + 1}`
+        );
+        return;
+      }
+
+      for (const [j, inf] of (veiculo.infracoes || []).entries()) {
+        if (!inf.codigoInfracao || !inf.descricaoInfracao) {
+          toast.error(
+            `Preencha todos os campos da infração ${j + 1} do veículo ${i + 1}`
+          );
+          return;
+        }
+      }
+    }
+
     try {
       const sessionResponse = await axios.get("/api/session");
       const agentId = sessionResponse.data.user?.id;
@@ -126,7 +201,19 @@ export default function BoletimForm() {
       toast.success(
         `Boletim salvo com sucesso! Protocolo: ${response.data.protocol}`
       );
-      reset({ veiculos: [] });
+      reset({
+        rua: "",
+        bairro: "",
+        pontoReferencia: "",
+        dataOcorrencia: "",
+        horaOcorrencia: "",
+        tipoClassificacao: "",
+        natureza: "",
+        condicaoVia: "",
+        vitimasFatais: 0,
+        vitimasNaoFatais: 0,
+        veiculos: [],
+      });
     } catch (err: any) {
       console.error("Erro ao salvar boletim:", err);
       toast.error("Erro ao salvar boletim. Tente novamente.");
@@ -155,7 +242,6 @@ export default function BoletimForm() {
               <div>
                 <label className="block mb-1">Rua/Av</label>
                 <Input
-                  placeholder="Digite a rua ou avenida"
                   {...register("rua", { required: "Campo obrigatório" })}
                 />
                 {errors.rua && (
@@ -165,7 +251,6 @@ export default function BoletimForm() {
               <div>
                 <label className="block mb-1">Bairro</label>
                 <Input
-                  placeholder="Digite o bairro"
                   {...register("bairro", { required: "Campo obrigatório" })}
                 />
                 {errors.bairro && (
@@ -177,7 +262,6 @@ export default function BoletimForm() {
               <div>
                 <label className="block mb-1">Ponto de Referência</label>
                 <Input
-                  placeholder="Ex.: Próximo ao supermercado"
                   {...register("pontoReferencia", {
                     required: "Campo obrigatório",
                   })}
@@ -252,66 +336,42 @@ export default function BoletimForm() {
               </div>
             </div>
 
-            {/* CONDIÇÕES */}
-            <div className="space-y-4">
-              <h2 className="font-semibold text-lg">Condições</h2>
-              <div>
-                <label className="block mb-1">Natureza do Acidente</label>
-                <Controller
-                  name="natureza"
-                  control={control}
-                  rules={{ required: "Campo obrigatório" }}
-                  render={({ field }) => (
-                    <Select onValueChange={field.onChange} value={field.value}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Natureza" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="ATROPELAMENTO">
-                          ATROPELAMENTO
-                        </SelectItem>
-                        <SelectItem value="COLISAO">COLISÃO</SelectItem>
-                        <SelectItem value="ENGAVETAMENTO">
-                          ENGAVETAMENTO
-                        </SelectItem>
-                        <SelectItem value="CHOQUE">CHOQUE</SelectItem>
-                        <SelectItem value="CAPOTAMENTO">CAPOTAMENTO</SelectItem>
-                        <SelectItem value="PEDESTRE">PEDESTRE</SelectItem>
-                      </SelectContent>
-                    </Select>
+            {/* VÍTIMAS */}
+            <div className="space-y-4 mt-4">
+              <h2 className="font-semibold text-lg">Vítimas</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                <div>
+                  <label className="block mb-1">Vítimas Fatais</label>
+                  <Input
+                    type="number"
+                    {...register("vitimasFatais", {
+                      valueAsNumber: true,
+                      min: 0,
+                      required: "Campo obrigatório",
+                    })}
+                  />
+                  {errors.vitimasFatais && (
+                    <p className="text-red-500 text-sm">
+                      {errors.vitimasFatais.message}
+                    </p>
                   )}
-                />
-                {errors.natureza && (
-                  <p className="text-red-500 text-sm">
-                    {errors.natureza.message}
-                  </p>
-                )}
-              </div>
-              <div>
-                <label className="block mb-1">Condição da Via</label>
-                <Controller
-                  name="condicaoVia"
-                  control={control}
-                  rules={{ required: "Campo obrigatório" }}
-                  render={({ field }) => (
-                    <Select onValueChange={field.onChange} value={field.value}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Condição da Via" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="SECA">SECA</SelectItem>
-                        <SelectItem value="MOLHADA">MOLHADA</SelectItem>
-                        <SelectItem value="LAMEADA">LAMEADA</SelectItem>
-                        <SelectItem value="OLEOSA">OLEOSA</SelectItem>
-                      </SelectContent>
-                    </Select>
+                </div>
+                <div>
+                  <label className="block mb-1">Vítimas Não Fatais</label>
+                  <Input
+                    type="number"
+                    {...register("vitimasNaoFatais", {
+                      valueAsNumber: true,
+                      min: 0,
+                      required: "Campo obrigatório",
+                    })}
+                  />
+                  {errors.vitimasNaoFatais && (
+                    <p className="text-red-500 text-sm">
+                      {errors.vitimasNaoFatais.message}
+                    </p>
                   )}
-                />
-                {errors.condicaoVia && (
-                  <p className="text-red-500 text-sm">
-                    {errors.condicaoVia.message}
-                  </p>
-                )}
+                </div>
               </div>
             </div>
 
@@ -320,7 +380,7 @@ export default function BoletimForm() {
               <h2 className="font-semibold text-lg">Veículos Envolvidos</h2>
               <Button
                 type="button"
-                className="bg-yellow-500 w-full"
+                className="bg-yellow-500 w-full cursor-pointer"
                 onClick={() =>
                   append({
                     tipoVeiculo: "",
@@ -367,6 +427,7 @@ export default function BoletimForm() {
                     <Button
                       type="button"
                       variant="destructive"
+                      className="cursor-pointer"
                       onClick={() => remove(index)}
                     >
                       Remover
@@ -617,6 +678,7 @@ export default function BoletimForm() {
                               <Button
                                 type="button"
                                 variant="destructive"
+                                className="cursor-pointer"
                                 onClick={() => {
                                   const updated = [...field.value];
                                   updated.splice(infIndex, 1);
@@ -630,6 +692,7 @@ export default function BoletimForm() {
 
                           <Button
                             type="button"
+                            className="cursor-pointer"
                             onClick={() =>
                               field.onChange([
                                 ...(field.value || []),
@@ -649,7 +712,8 @@ export default function BoletimForm() {
 
             <Button
               type="submit"
-              className="w-full bg-blue-900 hover:bg-blue-950"
+              className="w-full bg-blue-900 hover:bg-blue-950 cursor-pointer"
+              disabled={!isValid || fields.length === 0}
             >
               Salvar Boletim
             </Button>
