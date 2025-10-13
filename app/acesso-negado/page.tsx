@@ -10,13 +10,14 @@ export default function AcessoNegadoPage() {
   const router = useRouter();
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white">
+    <div className="h-[100dvh] flex flex-col items-center justify-between bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white">
       <motion.div
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
+        className="flex flex-1 items-center justify-center w-full px-4"
       >
-        <Card className="bg-slate-800/60 border border-slate-700 shadow-2xl backdrop-blur-md text-center p-6 w-[90%] max-w-md">
+        <Card className="bg-slate-800/60 border border-slate-700 shadow-2xl backdrop-blur-md text-center p-6 w-full max-w-md">
           <CardHeader>
             <div className="flex justify-center mb-3">
               <ShieldAlert className="h-14 w-14 text-red-500" />
@@ -26,7 +27,7 @@ export default function AcessoNegadoPage() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-slate-300 mb-6">
+            <p className="text-slate-300 mb-6 text-sm sm:text-base">
               Você não tem permissão para acessar esta página.
               <br />
               Entre em contato com o administrador do sistema.
@@ -50,7 +51,7 @@ export default function AcessoNegadoPage() {
         </Card>
       </motion.div>
 
-      <footer className="mt-8 text-slate-500 text-sm">
+      <footer className="pb-4 text-slate-500 text-sm text-center">
         © {new Date().getFullYear()} — Nuxt
       </footer>
     </div>
