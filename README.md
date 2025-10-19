@@ -1,36 +1,65 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+<h1 align="center">
+  <img alt="Boletim de Sinistro" height="80" src="./public/logo-nuxt.png" style="border-radius: 12px; padding: 5px;" />
+</h1>
 
-## Getting Started
+<p align="center">
+  <strong>Central Operacional de Sinistros - AMTTRANS</strong><br />
+  Processo de contratação e licenciamento — 2025
+</p>
 
-First, run the development server:
+<p align="center">
+  <img alt="Boletim de Sinistro Preview" src="./assets/1.png" width="800" />
+</p>
+<p align="center">
+  <img alt="Boletim de Sinistro Preview" src="./assets/2.png" width="800" />
+</p>
+<p align="center">
+  <img alt="Boletim de Sinistro Preview" src="./assets/3.png" width="800" />
+</p>
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 💻 Sobre o projeto
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Central Operacional de Sinistros
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+O software foi desenvolvido para tornar o registro e o acompanhamento de sinistros de trânsito mais ágeis, precisos e padronizados.
+Criado especialmente para a Autarquia Municipal de Trânsito e Transporte AMTTRANS, o sistema centraliza informações, automatiza processos e oferece uma visão completa das ocorrências de sinistros de trânsito.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Seja no atendimento, na gestão ou na análise de dados, a solução foi projetada para atender às demandas operacionais do setor público, promovendo **eficiência na gestão de informações**, **padronização dos registros** e **redução de processos manuais**.
 
-## Learn More
+Atualmente, o projeto encontra-se **em fase de contratação e licenciamento**, desenvolvido e mantido por **[Erick Welberth / Nuxt]**, com foco em implantação e suporte dedicado à AMTTRANS.
 
-To learn more about Next.js, take a look at the following resources:
+## ⚙️ **Funcionalidades**
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- [ ] **Autenticação de Usuário:** Login e cadastro utilizando _Better Auth_, com persistência de dados no banco **PostgreSQL**.
+- [ ] **Gestão de Sessão:** Dados do usuário armazenados de forma segura com **PrismaORM**.
+- [ ] **Preenchimento de Boletim:** Formulário completo para registro de sinistros de trânsito.
+- [ ] **Múltiplos Veículos:** Opção para adicionar mais de um veículo envolvido no mesmo boletim.
+- [ ] **Registro de Infrações:** Campo dedicado para adicionar infrações de trânsito associadas ao sinistro.
+- [ ] **Validação de Envio:** O botão de registro é habilitado apenas após o preenchimento de todos os campos obrigatórios e inclusão de pelo menos um veículo.
+- [ ] **Menu de Navegação:** Acesso rápido às páginas e módulos do sistema.
+- [ ] **Página de Histórico:** Exibição de todos os boletins registrados pelo agente, com visualização organizada.
+- [ ] **Número de Protocolo Único:** Cada boletim recebe um identificador exclusivo gerado automaticamente.
+- [ ] **Visualização Detalhada:** Opção de abrir cada boletim para consultar informações completas do registro.
+- [ ] **Geração de Declaração:** Emissão automática da declaração do condutor, com envio via e-mail e validação de protocolo.
+- [ ] **Envio de Comprovação:** Envio automático de e-mail ao condutor com a confirmação do registro e o documento para preenchimento manual.
+- [ ] **Central de Orientação:** Área dedicada a orientações e boas práticas para o agente de trânsito utilizar o sistema de forma eficiente.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 🛠️ Ferramentas
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- [ ] **Next.js**
+- [ ] **TypeScript**
+- [ ] **TailwindCSS**
+- [ ] **ShadCN**
+- [ ] **Lucide React**
+- [ ] **Framer Motion**
+- [ ] **React Hook Form**
+- [ ] **Zod**
+- [ ] **Better Auth**
+- [ ] **Axios**
+- [ ] **PrismaORM**
+- [ ] **NeonDB**
+- [ ] **Date-fns**
+- [ ] **Nodemailer**
+- [ ] **React Hot Toast**
+- [ ] **Vercel**
+- [ ] **Git**
