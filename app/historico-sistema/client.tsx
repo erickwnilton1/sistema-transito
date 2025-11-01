@@ -8,7 +8,7 @@ import LogoutButton from "../_components/logout-button-app";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
 import { formatDateTime } from "@/hooks/format-date-time";
-import ModalBoletim from "@/app/_components/bulletin-modal-app";
+import ModalBoletim from "@/app/boletim/_components/bulletin-modal-app";
 import ModalSendEmail from "../_components/modal-send-email-app";
 import { MapPin, Calendar, Clock, AlertCircle, User, Map } from "lucide-react";
 import {

@@ -9,7 +9,7 @@ import { Mail, Phone, Headphones, ArrowLeft } from "lucide-react";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 
-export default async function SuportePage() {
+export default function SuportePage() {
   const router = useRouter();
 
   return (

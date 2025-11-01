@@ -1,20 +1,21 @@
-import { auth } from "@/lib/auth";
-import LogoutButton from "../_components/logout-button-app";
 import {
-  SidebarProvider,
   Sidebar,
+  SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
-import SidebarMenuApp from "@/app/_components/sidebar-menu-app";
-import BoletimForm from "./_components/bulletin-form-app";
+import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
+import SidebarAdminApp from "./_components/layout/sidebar-admin-app";
+import LogoutButton from "../_components/logout-button-app";
+import { DashboardCards } from "./_components/dashboard/dashboardCards";
+import { DashboardTable } from "./_components/dashboard/dashboardTable";
 
-export default async function BoletimPage() {
+export default async function AdminPage() {
   const session = await auth.api.getSession({
     headers: await (await import("next/headers")).headers(),
   });
 
-  if (!session?.user) {
+  if (!session?.user || session.user.role !== "ADMIN") {
     redirect("/acesso-negado");
   }
 
@@ -22,7 +23,7 @@ export default async function BoletimPage() {
     <SidebarProvider>
       <div className="flex h-screen w-screen">
         <Sidebar className="border-r shadow-sm">
-          <SidebarMenuApp />
+          <SidebarAdminApp />
         </Sidebar>
 
         <div className="flex flex-1 flex-col">
@@ -30,20 +31,22 @@ export default async function BoletimPage() {
             <div className="flex items-center gap-3">
               <SidebarTrigger className="text-white" />
               <h1 className="text-xl font-bold text-white">
-                Boletim de Sinistro de Trânsito
+                Painel Administrativo
               </h1>
             </div>
             <div className="flex items-center gap-4">
-              <p className="text-sm text-gray-500">
-                Agente: {session.user.name} | Matrícula:{" "}
+              <p className="text-sm text-gray-200">
+                Administrador: {session.user.name} | Matrícula:{" "}
                 {session.user.registration}
               </p>
               <LogoutButton />
             </div>
           </header>
 
-          <main className="flex flex-1 items-center justify-center bg-gray-100">
-            <BoletimForm />
+          <main className="p-5">
+            <h1 className="text-2xl font-semibold mb-5">Dashboard</h1>
+            <DashboardCards />
+            <DashboardTable />
           </main>
         </div>
       </div>

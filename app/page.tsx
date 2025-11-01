@@ -1,26 +1,58 @@
 "use client";
 
 import axios from "axios";
+import Image from "next/image";
+import toast from "react-hot-toast";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
-import { User, Mail, CreditCard, Lock } from "lucide-react";
-import toast from "react-hot-toast";
-import Image from "next/image";
+import { User, Mail, CreditCard, Lock, Eye, EyeOff } from "lucide-react";
 import { validateRegistration } from "@/lib/registrations";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export default function HomePage() {
   const router = useRouter();
+
+  const [mode, setMode] = useState<"signin" | "signup">("signin");
+  const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const [form, setForm] = useState({
     name: "",
     email: "",
     registration: "",
     password: "",
+    role: "AGENT",
   });
 
-  const [mode, setMode] = useState<"signin" | "signup">("signin");
-  const [loading, setLoading] = useState(false);
+  const resetForm = (keepMode = false) => {
+    setForm({
+      name: "",
+      email: "",
+      registration: "",
+      password: "",
+      role: "AGENT",
+    });
+    if (!keepMode) setMode("signin");
+  };
+
+  async function redirectByRole() {
+    try {
+      const session = await authClient.getSession();
+
+      const role = session?.data?.user?.role;
+      router.push(role === "ADMIN" ? "/admin-sistema" : "/boletim");
+    } catch (err) {
+      console.error("Erro ao obter sessão:", err);
+      router.push("/boletim");
+    }
+  }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -28,63 +60,60 @@ export default function HomePage() {
 
     try {
       if (mode === "signup") {
-        // Validates if registration is on the list of authorized agents
         const isValid = validateRegistration(form.registration);
-
         if (!isValid) {
           toast.error("Matrícula não registrada no sistema.");
-          setLoading(false);
           return;
         }
 
-        // Check if the registration is already registered
         const { data: existingUser } = await axios.post("/api/check-user", {
           registration: form.registration,
         });
 
-        if (existingUser.exists) {
+        if (existingUser?.exists) {
           toast.error("Essa matrícula já está cadastrada. Faça login.");
-          router.push("/");
-          setLoading(false);
+          setMode("signin");
           return;
         }
 
-        // Register
-        const { data, error } = await authClient.signUp.email({
+        const { error } = await authClient.signUp.email({
           email: form.email,
           password: form.password,
           name: form.name,
           registration: form.registration,
-          callbackURL: "/boletim",
+          role: form.role,
         });
 
         if (error) {
-          console.error("Erro no cadastro:", error);
-          toast.error("Erro ao cadastrar o usuário.");
+          toast.error("Erro ao cadastrar usuário. Tente novamente.");
           return;
         }
 
         toast.success("Cadastro realizado com sucesso!");
-        router.push("/boletim");
-      } else {
-        // Login
-        const { data, error } = await authClient.signIn.email({
+        await redirectByRole();
+
+        resetForm(true);
+      } else if (mode === "signin") {
+        const { error } = await authClient.signIn.email({
           email: form.email,
           password: form.password,
         });
 
         if (error) {
-          console.error("Erro no login:", error);
           toast.error("Erro ao autenticar. Verifique suas credenciais.");
           return;
         }
 
         toast.success("Login realizado com sucesso!");
-        router.push("/boletim");
+        await redirectByRole();
+
+        resetForm(true);
       }
     } catch (err: any) {
       console.error("Erro inesperado:", err);
-      toast.error("Ocorreu um erro inesperado. Tente novamente.");
+      toast.error(
+        err?.message || "Ocorreu um erro inesperado. Tente novamente."
+      );
     } finally {
       setLoading(false);
     }
@@ -112,7 +141,7 @@ export default function HomePage() {
       </div>
 
       <div className="flex-1 flex items-center justify-center bg-white shadow-md">
-        <div className="flex w-full max-w-6xl lg:space-x-10 px-4">
+        <div className="flex w-full max-w-6xl lg:space-x-10 px-4 mb-5">
           <div className="hidden lg:flex flex-col justify-between w-1/2 p-8 bg-white border rounded-2xl shadow-lg">
             <div className="flex items-center mb-6">
               <Image
@@ -151,19 +180,55 @@ export default function HomePage() {
             </h2>
 
             {mode === "signup" && (
-              <div className="relative w-full">
-                <User
-                  className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
-                  size={20}
-                />
-                <input
-                  placeholder="Nome"
-                  value={form.name}
-                  onChange={(e) => setForm({ ...form, name: e.target.value })}
-                  className="w-full border p-2 pl-10 rounded"
-                  required
-                />
-              </div>
+              <>
+                <div className="w-full">
+                  <label className="text-sm font-medium text-gray-700 mb-1 block">
+                    Função
+                  </label>
+                  <Select
+                    onValueChange={(value) => setForm({ ...form, role: value })}
+                    defaultValue={form.role}
+                  >
+                    <SelectTrigger className="w-full border rounded px-3 py-2">
+                      <SelectValue placeholder="Selecione o papel" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="AGENT">Agente</SelectItem>
+                      <SelectItem value="ADMIN">Administrador</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="relative w-full">
+                  <User
+                    className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+                    size={20}
+                  />
+                  <input
+                    placeholder="Nome"
+                    value={form.name}
+                    onChange={(e) => setForm({ ...form, name: e.target.value })}
+                    className="w-full border p-2 pl-10 rounded"
+                    required
+                  />
+                </div>
+
+                <div className="relative w-full">
+                  <CreditCard
+                    className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+                    size={20}
+                  />
+                  <input
+                    placeholder="Matrícula"
+                    value={form.registration}
+                    onChange={(e) =>
+                      setForm({ ...form, registration: e.target.value })
+                    }
+                    className="w-full border p-2 pl-10 rounded"
+                    required
+                  />
+                </div>
+              </>
             )}
 
             <div className="relative w-full">
@@ -173,30 +238,13 @@ export default function HomePage() {
               />
               <input
                 placeholder="Email"
+                type="email"
                 value={form.email}
                 onChange={(e) => setForm({ ...form, email: e.target.value })}
                 className="w-full border p-2 pl-10 rounded"
                 required
               />
             </div>
-
-            {mode === "signup" && (
-              <div className="relative w-full">
-                <CreditCard
-                  className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
-                  size={20}
-                />
-                <input
-                  placeholder="Matrícula"
-                  value={form.registration}
-                  onChange={(e) =>
-                    setForm({ ...form, registration: e.target.value })
-                  }
-                  className="w-full border p-2 pl-10 rounded"
-                  required
-                />
-              </div>
-            )}
 
             <div className="relative w-full">
               <Lock
@@ -205,19 +253,27 @@ export default function HomePage() {
               />
               <input
                 placeholder="Senha"
-                type="password"
+                type={showPassword ? "text" : "password"}
                 value={form.password}
                 onChange={(e) => setForm({ ...form, password: e.target.value })}
-                className="w-full border p-2 pl-10 rounded"
+                className="w-full border p-2 pl-10 pr-10 rounded"
                 required
               />
+              <button
+                type="button"
+                onClick={() => setShowPassword((prev) => !prev)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                tabIndex={-1}
+              >
+                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+              </button>
             </div>
 
             <button
               type="submit"
               disabled={loading}
               className={`w-full bg-blue-900 text-white p-2 rounded cursor-pointer hover:bg-blue-950 transition ${
-                loading ? "opacity-20 cursor-not-allowed" : ""
+                loading ? "opacity-50 cursor-not-allowed" : ""
               }`}
             >
               {loading
@@ -231,7 +287,10 @@ export default function HomePage() {
               {mode === "signup" ? "Já tem conta?" : "Ainda não tem?"}
               <button
                 type="button"
-                onClick={() => setMode(mode === "signup" ? "signin" : "signup")}
+                onClick={() => {
+                  setMode(mode === "signup" ? "signin" : "signup");
+                  resetForm(true);
+                }}
                 className="ml-2 underline text-blue-900"
               >
                 {mode === "signup" ? "Entrar" : "Criar conta"}

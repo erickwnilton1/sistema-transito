@@ -39,11 +39,11 @@ interface Boletim {
   dataOcorrencia?: string;
   horaOcorrencia?: string;
   tipoClassificacao?: string;
-  fatais?: number;
-  naoFatais?: number;
-  veiculos?: Veiculo[];
-  vitimasNaoFatais: number;
   vitimasFatais: number;
+  vitimasNaoFatais: number;
+  veiculos?: Veiculo[];
+  latitude?: number;
+  longitude?: number;
 }
 
 interface ModalBoletimProps {
@@ -101,6 +101,10 @@ export default function ModalBoletim({ boletim, onClose }: ModalBoletimProps) {
                 label="Vítimas Não Fatais"
                 value={boletim.vitimasNaoFatais?.toString() ?? "0"}
               />
+
+              {/* Latitude e Longitude */}
+              <Info label="Latitude" value={boletim.latitude?.toFixed(6)} />
+              <Info label="Longitude" value={boletim.longitude?.toFixed(6)} />
             </div>
 
             {veiculos.length > 0 && (
@@ -169,7 +173,6 @@ export default function ModalBoletim({ boletim, onClose }: ModalBoletimProps) {
   );
 }
 
-// Subcomponente reutilizável para exibir campos
 function Info({
   label,
   value,
@@ -180,7 +183,7 @@ function Info({
   return (
     <p className="text-gray-700">
       <strong className="text-gray-900">{label}:</strong>{" "}
-      <span className="text-gray-600">{value || "-"}</span>
+      <span className="text-gray-600">{value ?? "-"}</span>
     </p>
   );
 }

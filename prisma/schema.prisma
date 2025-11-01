@@ -20,8 +20,14 @@ model User {
   accounts      Account[]
   Boletim       Boletim[]
   sessions      Session[]
+  role          Role      @default(AGENT)
 
   @@map("user")
+}
+
+enum Role {
+  ADMIN
+  AGENT
 }
 
 model Session {
@@ -69,13 +75,14 @@ model Verification {
 }
 
 model Boletim {
-  id          Int      @id @default(autoincrement())
-  protocol    String?  @unique
-  data        Json
-  observation String?
-  agentId     String
-  createdAt   DateTime @default(now())
-  agent       User     @relation(fields: [agentId], references: [id], onDelete: Cascade)
+  id           Int      @id @default(autoincrement())
+  protocol     String?  @unique
+  data         Json
+  observation  String?
+  AccidentType String?
+  agentId      String
+  createdAt    DateTime @default(now())
+  agent        User     @relation(fields: [agentId], references: [id], onDelete: Cascade)
 
   @@map("boletim")
 }

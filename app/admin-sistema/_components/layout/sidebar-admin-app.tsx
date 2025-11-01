@@ -16,9 +16,10 @@ export default function SidebarMenuApp() {
   const pathname = usePathname();
 
   const mainItems = [
-  { name: "Boletim", icon: Home, href: "/boletim" },
-  { name: "Histórico", icon: FileText, href: "/historico-sistema" },
-  { name: "Orientações", icon: ThumbsUp, href: "/orientacao-sistema" },
+    { name: "Dashboard", icon: Home, href: "/admin-sistema" },
+    { name: "Boletins", icon: Home, href: "/boletim" },
+    { name: "Agentes", icon: FileText, href: "/historico-sistema" },
+    { name: "Estatísticas", icon: ThumbsUp, href: "/orientacao-sistema" },
   ];
 
   const supportItem = {
