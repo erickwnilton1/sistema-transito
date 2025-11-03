@@ -17,9 +17,8 @@ export default function SidebarMenuApp() {
 
   const mainItems = [
     { name: "Dashboard", icon: Home, href: "/admin-sistema" },
-    { name: "Boletins", icon: Home, href: "/boletim" },
-    { name: "Agentes", icon: FileText, href: "/historico-sistema" },
-    { name: "Estatísticas", icon: ThumbsUp, href: "/orientacao-sistema" },
+    { name: "Boletins", icon: Home, href: "/admin-boletins-sistema" },
+    { name: "Agentes", icon: FileText, href: "/admin-agentes-sistema" },
   ];
 
   const supportItem = {

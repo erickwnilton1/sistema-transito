@@ -1,10 +1,10 @@
-import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { NextRequest, NextResponse } from "next/server";
 
-export async function GET() {
+export async function GET(req: NextRequest, res: NextResponse) {
   try {
     const boletins = await prisma.boletim.findMany({
-      include: { agent: true },
+      include: { agent: true }, // Inclui o nome do agente
       orderBy: { createdAt: "desc" },
     });
 
@@ -20,11 +20,25 @@ export async function GET() {
         info = {};
       }
 
+      const rua = info.rua || "";
+      const bairro = info.bairro ? ` - ${info.bairro}` : "";
+      const referencia = info.pontoReferencia
+        ? ` (${info.pontoReferencia})`
+        : "";
+
+      const local =
+        rua || bairro || referencia
+          ? `${rua}${bairro}${referencia}`
+          : "Não informado";
+
       return {
         id: b.id,
         protocolo: b.protocol,
         agente: b.agent?.name,
+        agentId: b.agent?.id,
         data: new Date(b.createdAt).toLocaleDateString("pt-BR"),
+        local,
+        tipo: info.tipoAcidente,
         status: "Registrado",
       };
     });

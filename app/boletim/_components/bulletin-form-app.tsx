@@ -242,7 +242,7 @@ export default function BoletimForm({ initialData }: BoletimFormProps) {
               <h2 className="font-semibold text-lg">Veículos Envolvidos</h2>
               <Button
                 type="button"
-                className="bg-yellow-500 w-full"
+                className="bg-yellow-500 w-full cursor-pointer"
                 onClick={() =>
                   append({
                     tipoVeiculo: "",
@@ -296,7 +296,7 @@ export default function BoletimForm({ initialData }: BoletimFormProps) {
             <Button
               type="submit"
               disabled={!isValid || fields.length === 0 || isSubmitting}
-              className="w-full bg-blue-900 hover:bg-blue-950"
+              className="w-full bg-blue-900 hover:bg-blue-950 cursor-pointer"
             >
               {isSubmitting ? "Salvando..." : "Salvar Boletim"}
             </Button>

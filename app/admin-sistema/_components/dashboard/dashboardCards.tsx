@@ -23,13 +23,9 @@ export function DashboardCards() {
     loadData();
   }, []);
 
-  if (loading) {
-    return <div className="text-gray-500">Carregando dados...</div>;
-  }
-
-  if (!stats) {
+  if (loading) return <div className="text-gray-500">Carregando dados...</div>;
+  if (!stats)
     return <div className="text-red-500">Erro ao carregar dados.</div>;
-  }
 
   const cards = [
     {
@@ -53,13 +49,13 @@ export function DashboardCards() {
   ];
 
   return (
-    <div className="grid gap-3 grid-cols-1 md:grid-cols-2 xl:grid-cols-3 w-full">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 w-full">
       {cards.map((stat) => (
         <Card
           key={stat.title}
-          className="bg-gray-100 shadow-md hover:bg-gray-200 transition"
+          className="bg-gray-100 shadow-md hover:bg-gray-200 transition flex flex-col"
         >
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
+          <CardHeader className="flex items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium text-gray-800">
               {stat.title}
             </CardTitle>
