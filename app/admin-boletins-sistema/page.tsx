@@ -33,13 +33,8 @@ export default async function AdminBoletinsPage() {
                 Painel Administrativo
               </h1>
             </div>
-            <div className="flex items-center gap-2">
-              <p className="text-sm text-white p-1 m-1">
-                Administrador: {session.user.name} | Matrícula:{" "}
-                {session.user.registration}
-              </p>
-              <LogoutButton />
-            </div>
+
+            <LogoutButton />
           </header>
 
           <main className="p-4 sm:p-5 flex-1 overflow-y-auto bg-gray-50">

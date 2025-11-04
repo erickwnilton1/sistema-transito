@@ -37,7 +37,7 @@ export default async function AdminPage() {
               </h1>
             </div>
             <div className="flex items-center gap-2">
-              <p className="text-sm text-white p-1 m-1">
+              <p className="text-sm text-gray-500">
                 Administrador: {session.user.name} | Matrícula:{" "}
                 {session.user.registration}
               </p>

@@ -1,18 +1,40 @@
 "use client";
+
 import { authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 export default function LogoutButton() {
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
+
   async function handleLogout() {
-    await authClient.signOut();
-    router.push("/");
+    try {
+      setIsLoading(true);
+      await authClient.signOut();
+      router.push("/");
+    } catch (error) {
+      console.error("Erro ao sair:", error);
+    } finally {
+      setIsLoading(false);
+    }
   }
+
   return (
-    <div className="flex items-center justify-center w-[50px] h-[40px] rounded-2xl m-1 bg-red-500 hover:bg-red-600 cursor-pointer">
-      <button onClick={handleLogout} className="text-white m-2 cursor-pointer">
-        Sair
-      </button>
-    </div>
+    <button
+      onClick={handleLogout}
+      disabled={isLoading}
+      className={`flex items-center justify-center w-[70px] h-[40px] rounded-2xl cursor-pointer
+        ${isLoading ? "bg-red-400 cursor-not-allowed" : "bg-red-500 hover:bg-red-600"} 
+        text-white transition-all duration-200`}
+    >
+      {isLoading ? (
+        <>
+          <span>Saindo</span>
+        </>
+      ) : (
+        "Sair"
+      )}
+    </button>
   );
 }
