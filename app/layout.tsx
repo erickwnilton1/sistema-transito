@@ -13,6 +13,10 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+export const viewport = {
+  themeColor: "#0a0a0a",
+};
+
 export const metadata: Metadata = {
   title: "Boletim de Sinistro de Trânsito",
   description:
@@ -22,7 +26,6 @@ export const metadata: Metadata = {
     apple: "/icons/icon-512x512.png",
   },
   manifest: "/manifest.json",
-  themeColor: "#0a0a0a",
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
