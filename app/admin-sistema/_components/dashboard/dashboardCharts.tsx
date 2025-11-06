@@ -196,7 +196,7 @@ export function DashboardCharts() {
             </CardContent>
           </Card>
 
-          <Card className="lg:col-span-2 bg-gray-100 border border-gray-100 shadow-sm">
+          <Card className="lg:col-span-2 bg-gray-50 border border-gray-100 shadow-sm">
             <CardHeader>
               <CardTitle className="text-gray-800">
                 Vias com mais acidentes
@@ -218,7 +218,7 @@ export function DashboardCharts() {
                     type="category"
                     dataKey="local"
                     tick={{ fill: "#334155" }}
-                    width={180}
+                    width={250}
                   />
                   <Tooltip />
                   <Legend />

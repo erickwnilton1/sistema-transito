@@ -7,7 +7,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { motion, AnimatePresence } from "framer-motion";
 import toast from "react-hot-toast";
-import { Loader2 } from "lucide-react";
 
 interface ModalSendEmailProps {
   open: boolean;
@@ -112,14 +111,7 @@ export default function ModalSendEmail({
                   disabled={isLoading}
                   className="bg-blue-900 hover:bg-blue-800 text-white rounded-lg cursor-pointer flex items-center gap-2"
                 >
-                  {isLoading ? (
-                    <>
-                      <Loader2 className="w-4 h-4 animate-spin" />
-                      Enviando...
-                    </>
-                  ) : (
-                    "Confirmar"
-                  )}
+                  {isLoading ? <>Enviando...</> : "Confirmar"}
                 </Button>
               </div>
             </form>
