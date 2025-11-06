@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { motion, AnimatePresence } from "framer-motion";
 import toast from "react-hot-toast";
+import { Loader2 } from "lucide-react";
 
 interface ModalSendEmailProps {
   open: boolean;
@@ -20,9 +21,11 @@ export default function ModalSendEmail({
   boletim,
 }: ModalSendEmailProps) {
   const [email, setEmail] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsLoading(true);
 
     try {
       const response = await axios.post("/api/send-registration", {
@@ -37,6 +40,7 @@ export default function ModalSendEmail({
       console.error("Erro ao enviar e-mail:", error);
       toast.error("Erro ao enviar e-mail. Tente novamente.");
     } finally {
+      setIsLoading(false);
       setEmail("");
       onClose();
     }
@@ -98,15 +102,24 @@ export default function ModalSendEmail({
                   type="button"
                   variant="outline"
                   onClick={onClose}
+                  disabled={isLoading}
                   className="rounded-lg cursor-pointer"
                 >
                   Cancelar
                 </Button>
                 <Button
                   type="submit"
-                  className="bg-blue-900 hover:bg-blue-800 text-white rounded-lg cursor-pointer"
+                  disabled={isLoading}
+                  className="bg-blue-900 hover:bg-blue-800 text-white rounded-lg cursor-pointer flex items-center gap-2"
                 >
-                  Confirmar
+                  {isLoading ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      Enviando...
+                    </>
+                  ) : (
+                    "Confirmar"
+                  )}
                 </Button>
               </div>
             </form>

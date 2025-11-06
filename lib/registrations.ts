@@ -4,6 +4,7 @@ export const authorizedRegistration = [
   "80038",
   "101010",
   "202020",
+  "303030",
 ];
 
 export function validateRegistration(registration: string) {
