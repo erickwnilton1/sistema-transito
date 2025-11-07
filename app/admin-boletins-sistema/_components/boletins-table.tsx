@@ -1,5 +1,4 @@
 "use client";
-
 import { useEffect, useState } from "react";
 import {
   Table,
@@ -12,8 +11,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Pencil } from "lucide-react";
-import { EditBoletimModal } from "./edit-boletim-modal";
-
+import EditBoletimModal from "./edit-boletim-modal";
 interface Boletim {
   id: number;
   protocolo: string;
@@ -21,7 +19,6 @@ interface Boletim {
   data: string;
   local: string;
   tipo: string;
-  gravidade: string;
   status: string;
 }
 
@@ -29,14 +26,20 @@ export function BoletinsTable() {
   const [boletins, setBoletins] = useState<Boletim[]>([]);
   const [selected, setSelected] = useState<Boletim | null>(null);
 
+  const fetchData = async () => {
+    const res = await fetch("/api/dashboard-boletim");
+    const data = await res.json();
+    setBoletins(data);
+  };
+
   useEffect(() => {
-    const fetchData = async () => {
-      const res = await fetch("/api/dashboard-boletim");
-      const data = await res.json();
-      setBoletins(data);
-    };
     fetchData();
   }, []);
+
+  const handleUpdated = async () => {
+    await fetchData();
+    setSelected(null);
+  };
 
   return (
     <div className="bg-white border border-gray-200 rounded-xl shadow-sm">
@@ -69,9 +72,9 @@ export function BoletinsTable() {
               </TableRow>
             ) : (
               boletins.map((b) => (
-                <TableRow key={b.protocolo} className="hover:bg-gray-100">
+                <TableRow key={b.id} className="hover:bg-gray-100">
                   <TableCell className="font-medium">{b.protocolo}</TableCell>
-                  <TableCell>{b.agente || "—"}</TableCell>
+                  <TableCell>{b.agente}</TableCell>
                   <TableCell>{b.data}</TableCell>
                   <TableCell>{b.local}</TableCell>
                   <TableCell>{b.tipo}</TableCell>
@@ -99,10 +102,8 @@ export function BoletinsTable() {
       {selected && (
         <EditBoletimModal
           boletim={selected}
-          onClose={() => setSelected(null)}
-          onUpdated={function (): void {
-            throw new Error("Function not implemented.");
-          }}
+          open={!!selected}
+          onClose={handleUpdated}
         />
       )}
     </div>

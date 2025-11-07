@@ -33,6 +33,7 @@ export function DashboardCards() {
       value: stats.boletins,
       icon: FileText,
       color: "text-blue-400",
+      bgColor: "bg-blue-100",
     },
     {
       title: "Agentes Ativos",
@@ -53,7 +54,7 @@ export function DashboardCards() {
       {cards.map((stat) => (
         <Card
           key={stat.title}
-          className="bg-gray-100 shadow-md hover:bg-gray-200 transition flex flex-col"
+          className={`bg-gray-100 shadow-md hover:bg-gray-200 transition flex flex-col`}
         >
           <CardHeader className="flex items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium text-gray-800">
