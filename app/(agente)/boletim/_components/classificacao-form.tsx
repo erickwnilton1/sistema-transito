@@ -9,7 +9,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import type { BoletimFormData } from "../../../types/types";
+import type { BoletimFormData } from "@/types/types";
 
 interface Props {
   control: any;

@@ -1,5 +1,5 @@
 import { auth } from "@/lib/auth";
-import LogoutButton from "../_components/logout-button-app";
+import LogoutButton from "@/app/_components/logout-button-app";
 import {
   SidebarProvider,
   Sidebar,

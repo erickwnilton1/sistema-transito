@@ -2,14 +2,14 @@
 
 import axios from "axios";
 import { useState, useEffect } from "react";
-import SidebarMenuApp from "../_components/sidebar-menu-app";
+import SidebarMenuApp from "../../_components/sidebar-menu-app";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import LogoutButton from "../_components/logout-button-app";
+import LogoutButton from "../../_components/logout-button-app";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
 import { formatDateTime } from "@/hooks/format-date-time";
-import ModalBoletim from "@/app/boletim/_components/bulletin-modal-app";
-import ModalSendEmail from "../_components/modal-send-email-app";
+import ModalBoletim from "../boletim/_components/bulletin-modal-app";
+import ModalSendEmail from "../../_components/modal-send-email-app";
 import { MapPin, Calendar, Clock, AlertCircle, User, Map } from "lucide-react";
 import {
   SidebarProvider,

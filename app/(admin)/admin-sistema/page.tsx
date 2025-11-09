@@ -6,7 +6,7 @@ import {
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import SidebarAdminApp from "./_components/layout/sidebar-admin-app";
-import LogoutButton from "../_components/logout-button-app";
+import LogoutButton from "../../_components/logout-button-app";
 import { DashboardCards } from "./_components/dashboard/dashboardCards";
 import { DashboardTable } from "./_components/dashboard/dashboardTable";
 import { AgentesTable } from "../admin-agentes-sistema/_components/table";

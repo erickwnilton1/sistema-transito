@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { useForm, useFieldArray } from "react-hook-form";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useEffect, useState } from "react";
-import type { BoletimFormData } from "../../../types/types";
+import type { BoletimFormData } from "@/types/types";
 import LocalizacaoForm from "./localizacao-form";
 import HorarioForm from "./horario-form";
 import ClassificacaoForm from "./classificacao-form";

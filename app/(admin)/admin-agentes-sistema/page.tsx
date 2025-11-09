@@ -6,7 +6,7 @@ import {
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import SidebarMenuApp from "../admin-sistema/_components/layout/sidebar-admin-app";
-import LogoutButton from "../_components/logout-button-app";
+import LogoutButton from "../../_components/logout-button-app";
 import { AgentesTable } from "./_components/table";
 
 export default async function AgentesPage() {

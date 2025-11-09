@@ -5,7 +5,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Controller, UseFormRegister } from "react-hook-form";
-import type { BoletimFormData } from "../../../types/types";
+import type { BoletimFormData } from "@/types/types";
 import CondutorForm from "./condutor-form";
 import ProprietarioForm from "./proprietario-form";
 import InfracaoForm from "./infracao-form";

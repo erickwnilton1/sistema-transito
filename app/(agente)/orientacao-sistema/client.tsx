@@ -5,8 +5,8 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
-import SidebarMenuApp from "../_components/sidebar-menu-app";
-import LogoutButton from "../_components/logout-button-app";
+import SidebarMenuApp from "@/app/_components/sidebar-menu-app";
+import LogoutButton from "@/app/_components/logout-button-app";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { motion } from "framer-motion";
 import {

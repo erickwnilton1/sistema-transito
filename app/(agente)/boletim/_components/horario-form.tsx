@@ -3,7 +3,7 @@
 import React from "react";
 import { Input } from "@/components/ui/input";
 import { UseFormRegister } from "react-hook-form";
-import type { BoletimFormData } from "../../../types/types";
+import { BoletimFormData } from "@/types/types";
 
 interface Props {
   register: UseFormRegister<BoletimFormData>;
