@@ -32,6 +32,7 @@ export default function BoletimForm({ initialData }: BoletimFormProps) {
     handleSubmit,
     reset,
     setValue,
+    getValues,
     formState: { errors, isValid },
   } = useForm<BoletimFormData>({
     mode: "onChange",
@@ -63,31 +64,62 @@ export default function BoletimForm({ initialData }: BoletimFormProps) {
       setLocationError("Geolocalização não é suportada pelo seu dispositivo.");
       return;
     }
+
     navigator.geolocation.getCurrentPosition(
-      (position) => {
+      async (position) => {
         const { latitude, longitude } = position.coords;
+
         setCoords({ latitude, longitude });
         setValue("latitude", latitude);
         setValue("longitude", longitude);
-      },
-      (error) => {
-        switch (error.code) {
-          case error.PERMISSION_DENIED:
-            setLocationError("Permissão negada para acessar a localização.");
-            break;
-          case error.POSITION_UNAVAILABLE:
-            setLocationError("Localização indisponível.");
-            break;
-          case error.TIMEOUT:
-            setLocationError("Tempo esgotado para obter localização.");
-            break;
-          default:
-            setLocationError("Erro desconhecido ao obter localização.");
+
+        try {
+          const url = `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=pt`;
+
+          const response = await axios.get(url, {
+            headers: {
+              "User-Agent": "Mozilla/5.0",
+            },
+          });
+
+          const data = response.data;
+
+          const rua =
+            data.localityInfo?.administrative?.find((a: any) =>
+              ["road", "street", "residential"].includes(
+                a.description?.toLowerCase()
+              )
+            )?.name ||
+            data.principalSubdivision ||
+            "";
+
+          const bairro =
+            data.localityInfo?.administrative?.find((a: any) =>
+              ["suburb", "neighbourhood"].includes(a.description?.toLowerCase())
+            )?.name || "";
+
+          if (!getValues("rua") && rua) setValue("rua", rua);
+          if (!getValues("bairro") && bairro) setValue("bairro", bairro);
+
+          toast.success("Endereço identificado automaticamente.");
+        } catch (error) {
+          console.error(error);
+          toast.error("Falha ao identificar endereço automaticamente.");
         }
       },
-      { enableHighAccuracy: true, timeout: 30000, maximumAge: 0 }
+
+      (error) => {
+        setLocationError(
+          error.code === error.PERMISSION_DENIED
+            ? "Permissão negada."
+            : error.code === error.POSITION_UNAVAILABLE
+              ? "Localização indisponível."
+              : "Não foi possível obter localização."
+        );
+      },
+      { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
     );
-  }, [setValue]);
+  }, [setValue, getValues]);
 
   const onSubmit = async (data: BoletimFormData) => {
     if (!data.veiculos || data.veiculos.length === 0) {
@@ -95,7 +127,6 @@ export default function BoletimForm({ initialData }: BoletimFormProps) {
       return;
     }
 
-    // Validação simples para cada veículo
     for (const [i, veiculo] of data.veiculos.entries()) {
       if (
         !veiculo.tipoVeiculo ||
