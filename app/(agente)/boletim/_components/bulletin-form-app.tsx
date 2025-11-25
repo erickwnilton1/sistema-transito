@@ -61,7 +61,7 @@ export default function BoletimForm({ initialData }: BoletimFormProps) {
 
   useEffect(() => {
     if (!navigator.geolocation) {
-      setLocationError("Geolocalização não é suportada pelo seu dispositivo.");
+      setLocationError("Geolocalização não é suportada.");
       return;
     }
 
@@ -74,52 +74,58 @@ export default function BoletimForm({ initialData }: BoletimFormProps) {
         setValue("longitude", longitude);
 
         try {
-          const url = `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=pt`;
+          const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&zoom=18&addressdetails=1`;
 
           const response = await axios.get(url, {
             headers: {
-              "User-Agent": "Mozilla/5.0",
+              "User-Agent": "Amttrans-Boletim/1.0",
+              "Accept-Language": "pt-BR",
             },
           });
 
-          const data = response.data;
+          const addr = response.data.address;
 
-          const rua =
-            data.localityInfo?.administrative?.find((a: any) =>
-              ["road", "street", "residential"].includes(
-                a.description?.toLowerCase()
-              )
-            )?.name ||
-            data.principalSubdivision ||
+          let rua =
+            addr.road ||
+            addr.street ||
+            addr.residential ||
+            addr.pedestrian ||
+            addr.path ||
+            addr.footway ||
+            addr.highway ||
             "";
 
-          const bairro =
-            data.localityInfo?.administrative?.find((a: any) =>
-              ["suburb", "neighbourhood"].includes(a.description?.toLowerCase())
-            )?.name || "";
+          if (!rua && addr.house_number && addr.road) {
+            rua = `${addr.road}, ${addr.house_number}`;
+          }
 
-          if (!getValues("rua") && rua) setValue("rua", rua);
-          if (!getValues("bairro") && bairro) setValue("bairro", bairro);
+          if (!rua && response.data.display_name) {
+            const partes = response.data.display_name.split(",");
+            rua = partes[0] || "";
+          }
+
+          const bairro =
+            addr.suburb ||
+            addr.neighbourhood ||
+            addr.city_district ||
+            addr.residential ||
+            "";
+
+          if (rua) setValue("rua", rua);
+          if (bairro) setValue("bairro", bairro);
 
           toast.success("Endereço identificado automaticamente.");
         } catch (error) {
-          console.error(error);
-          toast.error("Falha ao identificar endereço automaticamente.");
+          console.error("Erro geocoding:", error);
+          toast.error("Falha ao identificar o endereço.");
         }
       },
-
       (error) => {
-        setLocationError(
-          error.code === error.PERMISSION_DENIED
-            ? "Permissão negada."
-            : error.code === error.POSITION_UNAVAILABLE
-              ? "Localização indisponível."
-              : "Não foi possível obter localização."
-        );
+        setLocationError("Erro ao obter localização.");
       },
       { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
     );
-  }, [setValue, getValues]);
+  }, [setValue]);
 
   const onSubmit = async (data: BoletimFormData) => {
     if (!data.veiculos || data.veiculos.length === 0) {
