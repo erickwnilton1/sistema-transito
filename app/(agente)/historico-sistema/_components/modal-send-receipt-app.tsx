@@ -8,17 +8,17 @@ import { Label } from "@/components/ui/label";
 import { motion, AnimatePresence } from "framer-motion";
 import toast from "react-hot-toast";
 
-interface ModalSendEmailProps {
+interface ModalSendComprovanteProps {
   open: boolean;
   onClose: () => void;
   boletim?: any;
 }
 
-export default function ModalSendEmail({
+export default function ModalSendComprovante({
   open,
   onClose,
   boletim,
-}: ModalSendEmailProps) {
+}: ModalSendComprovanteProps) {
   const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
@@ -27,17 +27,17 @@ export default function ModalSendEmail({
     setIsLoading(true);
 
     try {
-      const response = await axios.post("/api/send-registration", {
+      const response = await axios.post("/api/send-receipt", {
+        protocol: boletim?.protocol, // <-- CORRIGIDO
         email,
-        protocol: boletim?.protocol,
       });
 
       if (response.status === 200) {
-        toast.success("E-mail enviado com sucesso.");
+        toast.success("Comprovante enviado com sucesso!");
       }
     } catch (error) {
-      console.error("Erro ao enviar e-mail:", error);
-      toast.error("Erro ao enviar e-mail. Tente novamente.");
+      console.error("Erro ao enviar comprovante:", error);
+      toast.error("Erro ao enviar o comprovante. Tente novamente.");
     } finally {
       setIsLoading(false);
       setEmail("");
@@ -65,7 +65,7 @@ export default function ModalSendEmail({
             </Button>
 
             <h2 className="mt-5 text-lg font-semibold text-gray-900 text-center">
-              Enviar Declaração do Cidadão
+              Enviar Comprovante do Cidadão
             </h2>
 
             {boletim && (
@@ -111,7 +111,7 @@ export default function ModalSendEmail({
                   disabled={isLoading}
                   className="bg-blue-900 hover:bg-blue-800 text-white rounded-lg cursor-pointer flex items-center gap-2"
                 >
-                  {isLoading ? <>Enviando...</> : "Confirmar"}
+                  {isLoading ? "Enviando..." : "Confirmar"}
                 </Button>
               </div>
             </form>

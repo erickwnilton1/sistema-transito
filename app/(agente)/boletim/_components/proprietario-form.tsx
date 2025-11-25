@@ -3,7 +3,6 @@
 import React from "react";
 import { Input } from "@/components/ui/input";
 import { UseFormRegister } from "react-hook-form";
-import type { Veiculo } from "@/types/types";
 
 interface Props {
   register: UseFormRegister<any>;

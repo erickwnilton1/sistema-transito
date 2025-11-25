@@ -82,7 +82,7 @@ export default function EditBoletimModal({
             <div className="p-4 border border-blue-100 rounded-xl bg-blue-50 text-center shadow-sm mt-4">
               <p className="text-sm text-gray-600">Protocolo do Boletim</p>
               <p className="text-2xl font-bold text-blue-900 mt-1 tracking-wide">
-                {boletim.protocolo}
+                {boletim.protocol}
               </p>
             </div>
 

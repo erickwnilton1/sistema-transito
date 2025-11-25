@@ -5,7 +5,8 @@ import fs from "fs";
 
 export async function POST(req: Request) {
   try {
-    const { email, protocolo } = await req.json();
+    const { email, protocol, protocolo } = await req.json();
+    const finalProtocol = protocol ?? protocolo;
 
     const pdfPath = path.join(
       process.cwd(),
@@ -47,7 +48,7 @@ export async function POST(req: Request) {
 
             <div style="background-color: #eef3fb; border-left: 4px solid #0a2a66; padding: 10px 15px; margin: 20px 0; border-radius: 5px;">
               <strong>Protocolo do Boletim:</strong>
-              <p style="font-size: 18px; color: #0a2a66; margin: 5px 0;"><b>${protocolo}</b></p>
+              <p style="font-size: 18px; color: #0a2a66; margin: 5px 0;"><b>${finalProtocol}</b></p>
             </div>
 
             <p>Segue em anexo a <b>Declaração do Condutor</b>, que deverá ser preenchida e encaminhada conforme orientação recebida.</p>
@@ -72,11 +73,11 @@ export async function POST(req: Request) {
     const mailOptions = {
       from: `"Autarquia de Trânsito" <${process.env.EMAIL_USER}>`,
       to: email,
-      subject: `Confirmação de Boletim de Sinistro - Protocolo ${protocolo}`,
+      subject: `Confirmação de Boletim de Sinistro - Protocolo ${finalProtocol}`,
       html: htmlTemplate,
       attachments: [
         {
-          filename: `Declaracao-${protocolo}.pdf`,
+          filename: `Declaracao-${finalProtocol}.pdf`,
           path: pdfPath,
           contentType: "application/pdf",
         },

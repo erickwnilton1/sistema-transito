@@ -13,7 +13,7 @@ import { Badge } from "@/components/ui/badge";
 
 interface Boletim {
   id: number;
-  protocolo: string;
+  protocol: string;
   agente: string;
   data: string;
   local: string;
@@ -66,10 +66,10 @@ export function DashboardTable() {
             ) : (
               boletins.map((b) => (
                 <TableRow
-                  key={b.protocolo}
+                  key={b.protocol}
                   className="hover:bg-gray-100 transition"
                 >
-                  <TableCell className="font-medium">{b.protocolo}</TableCell>
+                  <TableCell className="font-medium">{b.protocol}</TableCell>
                   <TableCell>{b.agente}</TableCell>
                   <TableCell>{b.data}</TableCell>
                   <TableCell>{b.local}</TableCell>

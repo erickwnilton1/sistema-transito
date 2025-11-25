@@ -33,7 +33,7 @@ export async function GET(req: NextRequest) {
 
       return {
         id: b.id,
-        protocolo: b.protocol,
+        protocol: b.protocol,
         agente: b.agent?.name,
         agentId: b.agent?.id,
         data: new Date(b.createdAt).toLocaleDateString("pt-BR"),

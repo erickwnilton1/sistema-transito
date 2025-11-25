@@ -16,6 +16,7 @@ import {
   Sidebar,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
+import ModalSendComprovante from "./_components/modal-send-receipt-app";
 
 export default function HistoricoClient() {
   const [boletins, setBoletins] = useState<any[]>([]);
@@ -23,6 +24,10 @@ export default function HistoricoClient() {
   const [selectedBoletim, setSelectedBoletim] = useState<any | null>(null);
   const [showEmailModal, setShowEmailModal] = useState(false);
   const [boletimEmail, setBoletimEmail] = useState<any | null>(null);
+  const [showComprovanteModal, setShowComprovanteModal] = useState(false);
+  const [boletimComprovante, setBoletimComprovante] = useState<any | null>(
+    null
+  );
 
   useEffect(() => {
     const fetchBoletins = async () => {
@@ -72,7 +77,7 @@ export default function HistoricoClient() {
                       <CardTitle className="text-lg font-bold">
                         Protocolo:{" "}
                         <span className="bg-blue-950 text-white px-2 py-1 rounded">
-                          {b.protocolo}
+                          {b.protocol}
                         </span>
                       </CardTitle>
                       <span className="text-sm text-gray-500">
@@ -141,7 +146,18 @@ export default function HistoricoClient() {
                           setShowEmailModal(true);
                         }}
                       >
-                        Gerar Declaração do Condutor
+                        Gerar Declaração do Cidadão
+                      </Button>
+
+                      <Button
+                        size="sm"
+                        className="bg-green-700 text-white hover:bg-green-600 rounded-lg cursor-pointer"
+                        onClick={() => {
+                          setBoletimComprovante(b);
+                          setShowComprovanteModal(true);
+                        }}
+                      >
+                        Gerar Comprovante do Cidadão
                       </Button>
                     </div>
                   </Card>
@@ -166,6 +182,17 @@ export default function HistoricoClient() {
               setBoletimEmail(null);
             }}
             boletim={boletimEmail}
+          />
+        )}
+
+        {showComprovanteModal && boletimComprovante && (
+          <ModalSendComprovante
+            open={showComprovanteModal}
+            onClose={() => {
+              setShowComprovanteModal(false);
+              setBoletimComprovante(null);
+            }}
+            boletim={boletimComprovante}
           />
         )}
       </div>

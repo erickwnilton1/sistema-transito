@@ -1,10 +1,5 @@
 "use client";
 
-import React from "react";
-import { Input } from "@/components/ui/input";
-import { Users } from "lucide-react";
-import type { BoletimFormData } from "@/types/types";
-
 interface Props {
   coords: { latitude: number; longitude: number } | null;
   locationError: string | null;
@@ -12,7 +7,7 @@ interface Props {
 
 export default function LocalizacaoForm({ coords, locationError }: Props) {
   return (
-    <div className="mb-6 p-5 border rounded-2xl bg-gradient-to-r from-blue-50 to-white shadow-md">
+    <div className="mb-6 p-5 border-2 border-blue-200 rounded-2xl bg-gradient-to-r from-blue-50 to-white shadow-md ">
       <h2 className="font-bold text-xl mb-3 flex items-center gap-2">
         Localização Atual
       </h2>

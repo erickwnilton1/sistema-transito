@@ -14,7 +14,7 @@ import { Pencil } from "lucide-react";
 import EditBoletimModal from "./edit-boletim-modal";
 interface Boletim {
   id: number;
-  protocolo: string;
+  protocol: string;
   agente: string;
   data: string;
   local: string;
@@ -73,7 +73,7 @@ export function BoletinsTable() {
             ) : (
               boletins.map((b) => (
                 <TableRow key={b.id} className="hover:bg-gray-100">
-                  <TableCell className="font-medium">{b.protocolo}</TableCell>
+                  <TableCell className="font-medium">{b.protocol}</TableCell>
                   <TableCell>{b.agente}</TableCell>
                   <TableCell>{b.data}</TableCell>
                   <TableCell>{b.local}</TableCell>

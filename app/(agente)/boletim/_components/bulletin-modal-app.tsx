@@ -32,7 +32,6 @@ interface Veiculo {
 
 interface Boletim {
   protocol?: string;
-  protocolo?: string;
   rua?: string;
   bairro?: string;
   pontoReferencia?: string;
@@ -76,7 +75,7 @@ export default function ModalBoletim({ boletim, onClose }: ModalBoletimProps) {
             <div className="text-center">
               <p className="text-sm text-gray-600">Protocolo do Boletim</p>
               <p className="text-3xl font-bold text-blue-900 bg-blue-50 inline-block px-4 py-2 rounded-xl mt-2 shadow-sm tracking-wide">
-                {boletim.protocolo}
+                {boletim.protocol}
               </p>
             </div>
 

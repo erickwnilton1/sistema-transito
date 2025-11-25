@@ -26,7 +26,7 @@ export async function GET(req: NextRequest) {
 
     const mappedBoletins = boletins.map((b) => ({
       id: b.id,
-      protocolo: b.protocol,
+      protocol: b.protocol,
       createdAt: b.createdAt.toISOString(),
       ...(typeof b.data === "object" && b.data !== null ? b.data : {}),
     }));
@@ -88,11 +88,11 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    const protocolo = `${dateStr}-${(countToday + 1).toString().padStart(4, "0")}`;
+    const protocolStr = `${dateStr}-${(countToday + 1).toString().padStart(4, "0")}`;
 
     const boletim = await prisma.boletim.create({
       data: {
-        protocol: protocolo,
+        protocol: protocolStr,
         data: boletimData,
         agentId,
       },
