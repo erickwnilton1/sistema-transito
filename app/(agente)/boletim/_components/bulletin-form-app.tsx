@@ -116,7 +116,6 @@ export default function BoletimForm({ initialData }: BoletimFormProps) {
 
           toast.success("Endereço identificado automaticamente.");
         } catch (error) {
-          console.error("Erro geocoding:", error);
           toast.error("Falha ao identificar o endereço.");
         }
       },

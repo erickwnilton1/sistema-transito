@@ -28,8 +28,8 @@ export default function ModalSendComprovante({
 
     try {
       const response = await axios.post("/api/send-receipt", {
-        protocol: boletim?.protocol, // <-- CORRIGIDO
         email,
+        protocol: boletim?.protocol,
       });
 
       if (response.status === 200) {
