@@ -41,12 +41,12 @@ type BoletimRaw = {
 type AgenteRaw = { id: string | number; name: string };
 
 const COLORS = [
-  "#4ade80",
-  "#facc15",
-  "#f87171",
-  "#60a5fa",
-  "#a78bfa",
-  "#f472b6",
+  "#05e556",
+  "#ffcc00",
+  "#e80c0c",
+  "#0072ff",
+  "#004a92",
+  "#fd6500",
 ];
 
 export function DashboardCharts() {
@@ -83,6 +83,7 @@ export function DashboardCharts() {
     const key = b.tipo ?? "Não informado";
     boletinsTipoMap[key] = (boletinsTipoMap[key] || 0) + 1;
   });
+
   const boletinsTipoData = Object.entries(boletinsTipoMap).map(
     ([tipo, Quantidade]) => ({ tipo, Quantidade })
   );
@@ -97,15 +98,18 @@ export function DashboardCharts() {
     }).length;
     return { name: a.name, Boletins: count };
   });
+
   const agentesBoletinsDataFiltered = agentesBoletinsData.filter(
     (a) => a.Boletins > 0
   );
 
   const lugaresMap: Record<string, number> = {};
+
   boletins.forEach((b) => {
     const local = b.local ?? "Não informado";
     lugaresMap[local] = (lugaresMap[local] || 0) + 1;
   });
+
   const lugaresData = Object.entries(lugaresMap)
     .map(([local, Quantidade], index) => ({
       local: `${index + 1}. ${local}`,
@@ -156,7 +160,7 @@ export function DashboardCharts() {
                   <YAxis tick={{ fill: "#334155" }} />
                   <Tooltip />
                   <Legend />
-                  <Bar dataKey="Quantidade" radius={[6, 6, 0, 0]}>
+                  <Bar dataKey="Quantidade" radius={[10, 10, 0, 0]}>
                     {boletinsTipoData.map((entry, index) => (
                       <Cell key={index} fill={COLORS[index % COLORS.length]} />
                     ))}
@@ -188,8 +192,8 @@ export function DashboardCharts() {
                   <Legend />
                   <Bar
                     dataKey="Boletins"
-                    fill="#4ade80"
-                    radius={[6, 6, 0, 0]}
+                    fill="#004a92"
+                    radius={[10, 10, 0, 0]}
                   />
                 </BarChart>
               </ResponsiveContainer>
