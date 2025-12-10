@@ -72,7 +72,7 @@ export default function CidadaoHomeClient() {
 
       <footer className="text-center text-gray-500 text-sm py-6 border-none">
         <p>Autarquia de Trânsito - Atendimento 24h</p>
-        <p>📞 (XX) XXXX-XXXX</p>
+        <p>(81) 3559-1326</p>
       </footer>
 
       <ModalComponent
