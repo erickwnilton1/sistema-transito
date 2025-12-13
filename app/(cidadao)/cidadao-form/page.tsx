@@ -1,3 +1,5 @@
-export default function CidadaoForm() {
-  return <h1>cidadão form</h1>;
+import CidadaoFormClient from "./cidadao-form-client";
+
+export default function Page() {
+  return <CidadaoFormClient />;
 }
