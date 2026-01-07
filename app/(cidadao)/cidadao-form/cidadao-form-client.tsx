@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import Image from "next/image";
 import { Label } from "@/components/ui/label";
+import { ImageUpload } from "../_components/image-upload-app";
 
 interface CidadaoFormData {
   nome: string;
@@ -21,6 +22,7 @@ interface CidadaoFormData {
   outroVeiculo?: { placa: string; modelo: string };
   testemunhas: { nome: string; telefone: string }[];
   relato: string;
+  imagemUrl?: string;
 }
 
 const steps = [
@@ -29,10 +31,12 @@ const steps = [
   "Ocorrência",
   "Envolvidos",
   "Relato",
+  "Fotos da Ocorrência",
 ];
 
 export default function CidadaoFormClient() {
   const [step, setStep] = useState(0);
+  const [imagemUrl, setImagemUrl] = useState<string | null>(null);
 
   const { register, control, handleSubmit, trigger } = useForm<CidadaoFormData>(
     {
@@ -54,7 +58,12 @@ export default function CidadaoFormClient() {
   const prevStep = () => setStep((prev) => prev - 1);
 
   const onSubmit = (data: CidadaoFormData) => {
-    console.log(data);
+    const payload = {
+      ...data,
+      imagemUrl,
+    };
+
+    console.log(payload);
   };
 
   return (
@@ -258,6 +267,31 @@ export default function CidadaoFormClient() {
                     placeholder="Relate todo ocorrido abaixo..."
                     {...register("relato", { required: true })}
                   />
+                </section>
+              )}
+
+              {step === 5 && (
+                <section className="space-y-4">
+                  <div className="space-y-1">
+                    <h3 className="font-semibold text-sm">
+                      Anexar fotos da ocorrência *
+                    </h3>
+                    <p className="text-xs text-gray-500">
+                      Envie imagens que ajudem a identificar o ocorrido.
+                    </p>
+                  </div>
+
+                  <ImageUpload
+                    onUploaded={(url) => {
+                      setImagemUrl(url);
+                    }}
+                  />
+
+                  {imagemUrl && (
+                    <p className="text-xs text-green-600 break-all">
+                      Imagem vinculada ao registro
+                    </p>
+                  )}
                 </section>
               )}
 
