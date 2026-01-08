@@ -48,6 +48,11 @@ export default function CidadaoFormClient() {
   const [step, setStep] = useState(0);
   const [imagemUrl, setImagemUrl] = useState<string | null>(null);
   const [uploadingImage, setUploadingImage] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitMessage, setSubmitMessage] = useState<{
+    type: "success" | "error";
+    text: string;
+  } | null>(null);
 
   const {
     register,
@@ -56,6 +61,7 @@ export default function CidadaoFormClient() {
     trigger,
     setValue,
     clearErrors,
+    reset,
     formState: { errors },
   } = useForm<CidadaoFormData>({
     defaultValues: { testemunhas: [] },
@@ -74,13 +80,49 @@ export default function CidadaoFormClient() {
 
   const prevStep = () => setStep((prev) => prev - 1);
 
-  const onSubmit = (data: CidadaoFormData) => {
-    const payload = {
-      ...data,
-      imagemUrl,
-    };
+  const onSubmit = async (data: CidadaoFormData) => {
+    setSubmitting(true);
+    setSubmitMessage(null);
 
-    console.log(payload);
+    try {
+      const payload = {
+        ...data,
+        imagemUrl,
+      };
+
+      const response = await fetch("/api/citizen-bulletins", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Erro ao enviar boletim");
+      }
+
+      const result = await response.json();
+
+      setSubmitMessage({
+        type: "success",
+        text: `Boletim registrado com sucesso!`,
+      });
+
+      reset();
+      setImagemUrl(null);
+      setStep(0);
+
+      setTimeout(() => setSubmitMessage(null), 5000);
+    } catch (error) {
+      setSubmitMessage({
+        type: "error",
+        text: error instanceof Error ? error.message : "Erro ao enviar boletim",
+      });
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -121,6 +163,18 @@ export default function CidadaoFormClient() {
           </CardHeader>
 
           <CardContent>
+            {submitMessage && (
+              <div
+                className={`mb-4 p-4 rounded-lg text-sm ${
+                  submitMessage.type === "success"
+                    ? "bg-green-100 text-green-800 border border-green-300"
+                    : "bg-red-100 text-red-800 border border-red-300"
+                }`}
+              >
+                {submitMessage.text}
+              </div>
+            )}
+
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
               {step === 0 && (
                 <section className="space-y-4">
@@ -417,7 +471,7 @@ export default function CidadaoFormClient() {
                     type="button"
                     variant="outline"
                     onClick={prevStep}
-                    disabled={uploadingImage}
+                    disabled={uploadingImage || submitting}
                     className="w-full cursor-pointer text-white bg-blue-950 hover:bg-blue-900 hover:text-white"
                   >
                     Voltar
@@ -428,7 +482,7 @@ export default function CidadaoFormClient() {
                   <Button
                     type="button"
                     onClick={nextStep}
-                    disabled={uploadingImage}
+                    disabled={uploadingImage || submitting}
                     className="w-full cursor-pointer bg-yellow-500 hover:bg-yellow-400"
                   >
                     Próximo
@@ -436,10 +490,14 @@ export default function CidadaoFormClient() {
                 ) : (
                   <Button
                     type="submit"
-                    disabled={uploadingImage}
+                    disabled={uploadingImage || submitting}
                     className="w-full cursor-pointer bg-yellow-500 hover:bg-yellow-400"
                   >
-                    {uploadingImage ? "Enviando imagem…" : "Enviar Registro"}
+                    {uploadingImage
+                      ? "Enviando imagem…"
+                      : submitting
+                        ? "Enviando boletim…"
+                        : "Enviar Registro"}
                   </Button>
                 )}
               </div>
