@@ -11,6 +11,7 @@ import { ImageUpload } from "../_components/image-upload-app";
 
 interface CidadaoFormData {
   nome: string;
+  email: string;
   cpf: string;
   telefone: string;
   placa: string;
@@ -22,7 +23,7 @@ interface CidadaoFormData {
   outroVeiculo?: { placa: string; modelo: string };
   testemunhas: { nome: string; telefone: string }[];
   relato: string;
-  imagemUrl?: string;
+  imagemUrl: string;
 }
 
 const steps = [
@@ -34,16 +35,32 @@ const steps = [
   "Fotos da Ocorrência",
 ];
 
+const stepFields: Record<number, (keyof CidadaoFormData)[]> = {
+  0: ["nome", "email", "cpf", "telefone"],
+  1: ["placa", "renavam"],
+  2: ["endereco", "data", "hora"],
+  3: [],
+  4: ["relato"],
+  5: ["imagemUrl"],
+};
+
 export default function CidadaoFormClient() {
   const [step, setStep] = useState(0);
   const [imagemUrl, setImagemUrl] = useState<string | null>(null);
+  const [uploadingImage, setUploadingImage] = useState(false);
 
-  const { register, control, handleSubmit, trigger } = useForm<CidadaoFormData>(
-    {
-      defaultValues: { testemunhas: [] },
-      mode: "onTouched",
-    }
-  );
+  const {
+    register,
+    control,
+    handleSubmit,
+    trigger,
+    setValue,
+    clearErrors,
+    formState: { errors },
+  } = useForm<CidadaoFormData>({
+    defaultValues: { testemunhas: [] },
+    mode: "onTouched",
+  });
 
   const { fields, append, remove } = useFieldArray({
     control,
@@ -51,7 +68,7 @@ export default function CidadaoFormClient() {
   });
 
   const nextStep = async () => {
-    const valid = await trigger();
+    const valid = await trigger(stepFields[step]);
     if (valid) setStep((prev) => prev + 1);
   };
 
@@ -111,22 +128,57 @@ export default function CidadaoFormClient() {
                     <Label>Nome completo *</Label>
                     <Input
                       placeholder="Nome completo"
-                      {...register("nome", { required: true })}
+                      {...register("nome", { required: "Nome é obrigatório" })}
                     />
+
+                    {errors.nome && (
+                      <div className="text-xs text-red-500">
+                        {errors.nome.message}
+                      </div>
+                    )}
+                  </div>
+                  <div className="space-y-1">
+                    <Label>E-mail *</Label>
+                    <Input
+                      placeholder="E-mail"
+                      {...register("email", {
+                        required: "E-mail é obrigatório",
+                      })}
+                    />
+
+                    {errors.email && (
+                      <div className="text-xs text-red-500">
+                        {errors.email.message}
+                      </div>
+                    )}
                   </div>
                   <div className="space-y-1">
                     <Label>CPF *</Label>
                     <Input
                       placeholder="CPF"
-                      {...register("cpf", { required: true })}
+                      {...register("cpf", { required: "CPF é obrigatório" })}
                     />
+
+                    {errors.cpf && (
+                      <div className="text-xs text-red-500">
+                        {errors.cpf.message}
+                      </div>
+                    )}
                   </div>
                   <div className="space-y-1">
                     <Label>Telefone *</Label>
                     <Input
                       placeholder="Telefone"
-                      {...register("telefone", { required: true })}
+                      {...register("telefone", {
+                        required: "Telefone é obrigatório",
+                      })}
                     />
+
+                    {errors.telefone && (
+                      <div className="text-xs text-red-500">
+                        {errors.telefone.message}
+                      </div>
+                    )}
                   </div>
                 </section>
               )}
@@ -137,15 +189,31 @@ export default function CidadaoFormClient() {
                     <Label>Placa do veículo *</Label>
                     <Input
                       placeholder="Placa do veículo"
-                      {...register("placa", { required: true })}
+                      {...register("placa", {
+                        required: "Placa é obrigatória",
+                      })}
                     />
+
+                    {errors.placa && (
+                      <div className="text-xs text-red-500">
+                        {errors.placa.message}
+                      </div>
+                    )}
                   </div>
                   <div className="space-y-1">
                     <Label>Renavam *</Label>
                     <Input
                       placeholder="Renavam"
-                      {...register("renavam", { required: true })}
+                      {...register("renavam", {
+                        required: "Renavam é obrigatório",
+                      })}
                     />
+
+                    {errors.renavam && (
+                      <div className="text-xs text-red-500">
+                        {errors.renavam.message}
+                      </div>
+                    )}
                   </div>
                 </section>
               )}
@@ -156,8 +224,16 @@ export default function CidadaoFormClient() {
                     <Label>Endereço do ocorrido *</Label>
                     <Input
                       placeholder="Endereço do ocorrido"
-                      {...register("endereco", { required: true })}
+                      {...register("endereco", {
+                        required: "Endereço é obrigatório",
+                      })}
                     />
+
+                    {errors.endereco && (
+                      <div className="text-xs text-red-500">
+                        {errors.endereco.message}
+                      </div>
+                    )}
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="space-y-1">
@@ -165,16 +241,32 @@ export default function CidadaoFormClient() {
                       <Input
                         type="date"
                         placeholder="Data"
-                        {...register("data", { required: true })}
+                        {...register("data", {
+                          required: "Data é obrigatória",
+                        })}
                       />
+
+                      {errors.data && (
+                        <div className="text-xs text-red-500">
+                          {errors.data.message}
+                        </div>
+                      )}
                     </div>
                     <div className="space-y-1">
                       <Label>Hora *</Label>
                       <Input
                         type="time"
                         placeholder="Hora"
-                        {...register("hora", { required: true })}
+                        {...register("hora", {
+                          required: "Hora é obrigatória",
+                        })}
                       />
+
+                      {errors.hora && (
+                        <div className="text-xs text-red-500">
+                          {errors.hora.message}
+                        </div>
+                      )}
                     </div>
                   </div>
                 </section>
@@ -265,8 +357,16 @@ export default function CidadaoFormClient() {
                   <Textarea
                     rows={5}
                     placeholder="Relate todo ocorrido abaixo..."
-                    {...register("relato", { required: true })}
+                    {...register("relato", {
+                      required: "Relato é obrigatório",
+                    })}
                   />
+
+                  {errors.relato && (
+                    <div className="text-xs text-red-500">
+                      {errors.relato.message}
+                    </div>
+                  )}
                 </section>
               )}
 
@@ -281,9 +381,25 @@ export default function CidadaoFormClient() {
                     </p>
                   </div>
 
+                  <input
+                    type="hidden"
+                    {...register("imagemUrl", {
+                      required: "É obrigatório enviar ao menos uma imagem",
+                    })}
+                  />
+
+                  {errors.imagemUrl && (
+                    <p className="text-xs text-red-500">
+                      {errors.imagemUrl.message}
+                    </p>
+                  )}
+
                   <ImageUpload
+                    onUploadingChange={setUploadingImage}
                     onUploaded={(url) => {
                       setImagemUrl(url);
+                      setValue("imagemUrl", url, { shouldValidate: true });
+                      clearErrors("imagemUrl");
                     }}
                   />
 
@@ -301,15 +417,18 @@ export default function CidadaoFormClient() {
                     type="button"
                     variant="outline"
                     onClick={prevStep}
+                    disabled={uploadingImage}
                     className="w-full cursor-pointer text-white bg-blue-950 hover:bg-blue-900 hover:text-white"
                   >
                     Voltar
                   </Button>
                 )}
+
                 {step < steps.length - 1 ? (
                   <Button
                     type="button"
                     onClick={nextStep}
+                    disabled={uploadingImage}
                     className="w-full cursor-pointer bg-yellow-500 hover:bg-yellow-400"
                   >
                     Próximo
@@ -317,9 +436,10 @@ export default function CidadaoFormClient() {
                 ) : (
                   <Button
                     type="submit"
+                    disabled={uploadingImage}
                     className="w-full cursor-pointer bg-yellow-500 hover:bg-yellow-400"
                   >
-                    Enviar Registro
+                    {uploadingImage ? "Enviando imagem…" : "Enviar Registro"}
                   </Button>
                 )}
               </div>

@@ -5,8 +5,10 @@ import { Input } from "@/components/ui/input";
 
 export function ImageUpload({
   onUploaded,
+  onUploadingChange,
 }: {
   onUploaded?: (url: string) => void;
+  onUploadingChange?: (uploading: boolean) => void;
 }) {
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -16,6 +18,7 @@ export function ImageUpload({
     if (!file) return;
 
     setUploading(true);
+    onUploadingChange?.(true);
     setError(null);
 
     try {
@@ -46,6 +49,7 @@ export function ImageUpload({
       setError(err instanceof Error ? err.message : "Erro no upload");
     } finally {
       setUploading(false);
+      onUploadingChange?.(false);
     }
   }
 
