@@ -96,6 +96,7 @@ enum CitizenBulletinStatus {
 
 model CitizenBulletin {
   id              String                @id @default(cuid())
+  protocol        String?               @unique
   email           String
   cpf             String
   nome            String

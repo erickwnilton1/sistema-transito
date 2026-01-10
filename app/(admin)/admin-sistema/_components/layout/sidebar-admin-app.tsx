@@ -19,6 +19,7 @@ export default function SidebarMenuApp() {
     { name: "Dashboard", icon: Home, href: "/admin-sistema" },
     { name: "Boletins", icon: Home, href: "/admin-boletins-sistema" },
     { name: "Agentes", icon: FileText, href: "/admin-agentes-sistema" },
+    { name: "Cidadão", icon: FileText, href: "/admin-cidadao-sistema" },
   ];
 
   const supportItem = {
