@@ -64,7 +64,7 @@ export default function CidadaoHomeClient() {
               className="w-full py-6 text-lg bg-yellow-500 hover:bg-yellow-400 cursor-pointer"
               asChild
             >
-              <a href="/consulta">Consultar Boletim</a>
+              <a href="/cidadao-consulta">Consultar Boletim</a>
             </Button>
           </form>
         </div>
