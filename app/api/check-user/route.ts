@@ -5,12 +5,12 @@ export async function POST(req: Request) {
   try {
     const { registration } = await req.json();
 
-    if (!registration) {
+    if (!registration || registration.trim().length === 0) {
       return NextResponse.json({ exists: false });
     }
 
     const user = await prisma.user.findUnique({
-      where: { registration },
+      where: { registration: registration.trim() },
     });
 
     return NextResponse.json({ exists: !!user });

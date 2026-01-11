@@ -7,7 +7,10 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
 import { User, Mail, CreditCard, Lock, Eye, EyeOff } from "lucide-react";
-import { validateRegistration } from "@/lib/registrations";
+import {
+  validateRegistrationFormat,
+  checkRegistrationExists,
+} from "@/lib/registrations";
 import {
   Select,
   SelectContent,
@@ -60,19 +63,21 @@ export default function HomePage() {
 
     try {
       if (mode === "signup") {
-        const isValid = validateRegistration(form.registration);
-        if (!isValid) {
-          toast.error("Matrícula não registrada no sistema.");
+        // Validar formato básico da matrícula
+        if (!validateRegistrationFormat(form.registration)) {
+          toast.error("Matrícula deve ter pelo menos 3 caracteres.");
+          setLoading(false);
           return;
         }
 
-        const { data: existingUser } = await axios.post("/api/check-user", {
-          registration: form.registration,
-        });
-
-        if (existingUser?.exists) {
+        // Verificar se a matrícula já existe no sistema
+        const registrationExists = await checkRegistrationExists(
+          form.registration
+        );
+        if (registrationExists) {
           toast.error("Essa matrícula já está cadastrada. Faça login.");
           setMode("signin");
+          setLoading(false);
           return;
         }
 
@@ -86,6 +91,7 @@ export default function HomePage() {
 
         if (error) {
           toast.error("Erro ao cadastrar usuário. Tente novamente.");
+          setLoading(false);
           return;
         }
 
@@ -101,6 +107,7 @@ export default function HomePage() {
 
         if (error) {
           toast.error("Erro ao autenticar. Verifique suas credenciais.");
+          setLoading(false);
           return;
         }
 
