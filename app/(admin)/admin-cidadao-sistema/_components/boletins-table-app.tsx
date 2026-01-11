@@ -13,6 +13,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Pencil, Loader2, AlertCircle, Eye } from "lucide-react";
 import { CitizenBulletin } from "@/types/boletim";
+import ViewBoletimModal from "./modal-boletin-app";
 
 interface CitizenBulletinsTableProps {
   initialData?: CitizenBulletin[];
@@ -27,6 +28,9 @@ export function CitizenBulletinsTable({
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [statusFilter, setStatusFilter] = useState<string>("");
+  const [selectedBoletim, setSelectedBoletim] =
+    useState<CitizenBulletin | null>(null);
+  const [viewOpen, setViewOpen] = useState(false);
 
   const fetchData = useCallback(
     async (pageNum: number = 1, status?: string) => {
@@ -115,7 +119,6 @@ export function CitizenBulletinsTable({
           Página {page} de {totalPages}
         </span>
       </div>
-
       <div className="p-4 border-b border-gray-100 flex gap-2 flex-wrap">
         <Button
           variant={statusFilter === "" ? "default" : "outline"}
@@ -158,21 +161,18 @@ export function CitizenBulletinsTable({
           Rejeitados
         </Button>
       </div>
-
       {error && (
         <div className="p-4 bg-red-50 border-b border-red-200 flex items-center gap-2 text-red-700">
           <AlertCircle size={18} />
           <span>{error}</span>
         </div>
       )}
-
       {loading && (
         <div className="p-8 flex items-center justify-center">
           <Loader2 className="animate-spin mr-2" size={20} />
           <span className="text-gray-600">Carregando boletins...</span>
         </div>
       )}
-
       {!loading && (
         <>
           <div className="overflow-x-auto">
@@ -238,9 +238,14 @@ export function CitizenBulletinsTable({
                           size="icon"
                           title="Visualizar detalhes"
                           className="hover:bg-blue-50"
+                          onClick={() => {
+                            setSelectedBoletim(b);
+                            setViewOpen(true);
+                          }}
                         >
                           <Eye size={16} />
                         </Button>
+
                         <Button
                           variant="outline"
                           size="icon"
@@ -280,6 +285,14 @@ export function CitizenBulletinsTable({
           )}
         </>
       )}
+      <ViewBoletimModal
+        open={viewOpen}
+        boletim={selectedBoletim}
+        onClose={() => {
+          setViewOpen(false);
+          setSelectedBoletim(null);
+        }}
+      />
     </div>
   );
 }
