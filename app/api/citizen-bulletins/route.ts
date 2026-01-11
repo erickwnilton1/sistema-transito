@@ -101,16 +101,12 @@ export async function POST(request: NextRequest) {
         </div>
 
         <p>
-          Seu registro passará por uma <b>análise técnica</b>. Após a aprovação do boletim,
-          você receberá <b>um novo e-mail</b> contendo todas as informações detalhadas do ocorrido.
+          Seu registro passará por uma <b>análise</b>. Após a aprovação do boletim,
+          com o prazo de <b>até 5 dias úteis</b>, você poderá consultar a situação do seu boletim
+          seguindo os passos abaixo:
         </p>
 
         <h3 style="margin-top: 25px;">📌 Como consultar seu boletim</h3>
-
-        <p>
-          Após o prazo de <b>até 5 dias úteis</b>, você poderá consultar a situação do seu boletim
-          seguindo os passos abaixo:
-        </p>
 
         <ol style="padding-left: 18px; line-height: 1.6;">
           <li>Acesse o portal da Autarquia Municipal de Trânsito;</li>

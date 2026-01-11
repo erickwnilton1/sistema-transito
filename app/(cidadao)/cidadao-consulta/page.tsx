@@ -11,7 +11,9 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { Loader2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Loader2, Eye } from "lucide-react";
+import ViewBoletimModal from "@/app/(admin)/admin-cidadao-sistema/_components/modal-boletin-app";
 
 interface ApprovedBulletin {
   id: string;
@@ -24,6 +26,10 @@ interface ApprovedBulletin {
 export default function BoletinsAprovadosPage() {
   const [data, setData] = useState<ApprovedBulletin[]>([]);
   const [loading, setLoading] = useState(true);
+
+  const [selectedBoletim, setSelectedBoletim] =
+    useState<ApprovedBulletin | null>(null);
+  const [openModal, setOpenModal] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -40,6 +46,16 @@ export default function BoletinsAprovadosPage() {
 
     fetchData();
   }, []);
+
+  function handleOpenModal(boletim: ApprovedBulletin) {
+    setSelectedBoletim(boletim);
+    setOpenModal(true);
+  }
+
+  function handleCloseModal() {
+    setOpenModal(false);
+    setSelectedBoletim(null);
+  }
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
@@ -98,6 +114,7 @@ export default function BoletinsAprovadosPage() {
                     <TableHead>Placa</TableHead>
                     <TableHead>Data</TableHead>
                     <TableHead>Status</TableHead>
+                    <TableHead className="text-right">Ver detalhes</TableHead>
                   </TableRow>
                 </TableHeader>
 
@@ -105,7 +122,7 @@ export default function BoletinsAprovadosPage() {
                   {data.length === 0 ? (
                     <TableRow>
                       <TableCell
-                        colSpan={5}
+                        colSpan={6}
                         className="text-center py-10 text-gray-400"
                       >
                         Nenhum boletim aprovado encontrado.
@@ -138,6 +155,18 @@ export default function BoletinsAprovadosPage() {
                             Aprovado
                           </Badge>
                         </TableCell>
+
+                        <TableCell className="text-right">
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => handleOpenModal(b)}
+                            className="gap-2"
+                          >
+                            <Eye className="w-4 h-4" />
+                            Ver detalhes
+                          </Button>
+                        </TableCell>
                       </TableRow>
                     ))
                   )}
@@ -152,6 +181,12 @@ export default function BoletinsAprovadosPage() {
         <p>Autarquia de Trânsito - Atendimento 24h</p>
         <p>(81) 3559-1326</p>
       </footer>
+
+      <ViewBoletimModal
+        open={openModal}
+        onClose={handleCloseModal}
+        boletim={selectedBoletim}
+      />
     </div>
   );
 }
