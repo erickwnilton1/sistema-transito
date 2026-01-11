@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/button";
 import { Pencil, Loader2, AlertCircle, Eye } from "lucide-react";
 import { CitizenBulletin } from "@/types/boletim";
 import ViewBoletimModal from "./modal-boletin-app";
+import EditBoletimStatusModal from "./edit-boletin-status-app";
 
 interface CitizenBulletinsTableProps {
   initialData?: CitizenBulletin[];
@@ -31,6 +32,7 @@ export function CitizenBulletinsTable({
   const [selectedBoletim, setSelectedBoletim] =
     useState<CitizenBulletin | null>(null);
   const [viewOpen, setViewOpen] = useState(false);
+  const [editOpen, setEditOpen] = useState(false);
 
   const fetchData = useCallback(
     async (pageNum: number = 1, status?: string) => {
@@ -249,8 +251,12 @@ export function CitizenBulletinsTable({
                         <Button
                           variant="outline"
                           size="icon"
-                          title="Editar boletim"
+                          title="Editar status"
                           className="hover:bg-blue-50"
+                          onClick={() => {
+                            setSelectedBoletim(b);
+                            setEditOpen(true);
+                          }}
                         >
                           <Pencil size={16} />
                         </Button>
@@ -292,6 +298,16 @@ export function CitizenBulletinsTable({
           setViewOpen(false);
           setSelectedBoletim(null);
         }}
+      />
+
+      <EditBoletimStatusModal
+        open={editOpen}
+        boletim={selectedBoletim}
+        onClose={() => {
+          setEditOpen(false);
+          setSelectedBoletim(null);
+        }}
+        onUpdated={() => fetchData(page, statusFilter)}
       />
     </div>
   );
