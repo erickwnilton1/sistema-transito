@@ -102,7 +102,6 @@ export function CitizenBulletinsTable({
 
   return (
     <div className="bg-white border border-gray-200 rounded-xl shadow-sm">
-      {/* Header */}
       <div className="p-4 border-b border-gray-100 flex items-center justify-between">
         <div>
           <h3 className="text-lg font-semibold text-gray-900">
@@ -117,12 +116,12 @@ export function CitizenBulletinsTable({
         </span>
       </div>
 
-      {/* Filtros */}
       <div className="p-4 border-b border-gray-100 flex gap-2 flex-wrap">
         <Button
           variant={statusFilter === "" ? "default" : "outline"}
           size="sm"
           onClick={() => handleStatusFilter("")}
+          className="bg-blue-900"
         >
           Todos
         </Button>
@@ -160,7 +159,6 @@ export function CitizenBulletinsTable({
         </Button>
       </div>
 
-      {/* Error State */}
       {error && (
         <div className="p-4 bg-red-50 border-b border-red-200 flex items-center gap-2 text-red-700">
           <AlertCircle size={18} />
@@ -168,7 +166,6 @@ export function CitizenBulletinsTable({
         </div>
       )}
 
-      {/* Loading State */}
       {loading && (
         <div className="p-8 flex items-center justify-center">
           <Loader2 className="animate-spin mr-2" size={20} />
@@ -176,14 +173,13 @@ export function CitizenBulletinsTable({
         </div>
       )}
 
-      {/* Table */}
       {!loading && (
         <>
           <div className="overflow-x-auto">
             <Table>
               <TableHeader>
                 <TableRow className="bg-gray-50">
-                  <TableHead className="font-semibold">Id</TableHead>
+                  <TableHead className="font-semibold">Protocolo</TableHead>
                   <TableHead className="font-semibold">Nome</TableHead>
                   <TableHead className="font-semibold">CPF</TableHead>
                   <TableHead className="font-semibold">Email</TableHead>
@@ -212,7 +208,7 @@ export function CitizenBulletinsTable({
                       className="hover:bg-gray-50 transition-colors"
                     >
                       <TableCell className="font-medium text-gray-900">
-                        {b.id}
+                        {b.protocol}
                       </TableCell>
                       <TableCell className="font-medium text-gray-900">
                         {b.nome}
@@ -261,7 +257,6 @@ export function CitizenBulletinsTable({
             </Table>
           </div>
 
-          {/* Pagination */}
           {totalPages > 1 && (
             <div className="p-4 border-t border-gray-100 flex items-center justify-between">
               <Button

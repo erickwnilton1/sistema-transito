@@ -1,16 +1,5 @@
-/**
- * Types para o Sistema de Boletim de Cidadão
- * Arquivo: @/types/boletim.ts
- */
-
-/**
- * Status possíveis de um boletim
- */
 export type BulletinStatus = "PENDING" | "APPROVED" | "REJECTED";
 
-/**
- * Informações de outro condutor envolvido no incidente
- */
 export interface OutroCondutor {
   nome: string;
   cpf: string;
@@ -21,9 +10,6 @@ export interface OutroCondutor {
   categoriaCNH?: string;
 }
 
-/**
- * Informações de outro veículo envolvido no incidente
- */
 export interface OutroVeiculo {
   placa: string;
   marca: string;
@@ -34,9 +20,6 @@ export interface OutroVeiculo {
   proprietario?: string;
 }
 
-/**
- * Informações de testemunha
- */
 export interface Testemunha {
   nome: string;
   cpf?: string;
@@ -45,9 +28,6 @@ export interface Testemunha {
   endereco?: string;
 }
 
-/**
- * Dados completos de um boletim de cidadão
- */
 export interface CitizenBulletin {
   id: string;
   protocol: string;
@@ -70,9 +50,6 @@ export interface CitizenBulletin {
   updatedAt?: Date | string;
 }
 
-/**
- * Payload para criar um novo boletim
- */
 export interface CreateBulletinPayload {
   nome: string;
   email: string;
@@ -90,18 +67,12 @@ export interface CreateBulletinPayload {
   imagemUrl: string;
 }
 
-/**
- * Resposta ao criar um boletim
- */
 export interface CreateBulletinResponse {
   message: string;
   id: string;
   protocol: string;
 }
 
-/**
- * Resposta ao buscar boletins com paginação
- */
 export interface GetBulletinsResponse {
   bulletins: CitizenBulletin[];
   total: number;
@@ -110,26 +81,16 @@ export interface GetBulletinsResponse {
   limit: number;
 }
 
-/**
- * Resposta de erro da API
- */
 export interface ApiErrorResponse {
   error: string;
   existingProtocol?: string;
 }
 
-/**
- * Parâmetros de query para buscar boletins
- */
 export interface GetBulletinsParams {
   page?: number;
   limit?: number;
   status?: BulletinStatus;
 }
-
-/**
- * Payload para atualizar um boletim
- */
 export interface UpdateBulletinPayload {
   nome?: string;
   email?: string;
@@ -147,19 +108,12 @@ export interface UpdateBulletinPayload {
   imageUrl?: string;
   status?: BulletinStatus;
 }
-
-/**
- * Resposta ao atualizar um boletim
- */
 export interface UpdateBulletinResponse {
   message: string;
   id: string;
   protocol: string;
 }
 
-/**
- * Informações de protocolo gerado
- */
 export interface ProtocolInfo {
   protocol: string;
   bulletinId: string;
@@ -167,9 +121,6 @@ export interface ProtocolInfo {
   status: BulletinStatus;
 }
 
-/**
- * Filtros para buscar boletins
- */
 export interface BulletinFilters {
   status?: BulletinStatus;
   cpf?: string;
@@ -180,9 +131,6 @@ export interface BulletinFilters {
   protocol?: string;
 }
 
-/**
- * Dados para exportação de boletim
- */
 export interface BulletinExportData {
   id: string;
   protocol: string;
@@ -200,9 +148,6 @@ export interface BulletinExportData {
   criadoEm: string;
 }
 
-/**
- * Estatísticas de boletins
- */
 export interface BulletinStatistics {
   total: number;
   pendentes: number;
@@ -213,9 +158,6 @@ export interface BulletinStatistics {
   percentualPendente: number;
 }
 
-/**
- * Validação de campos de boletim
- */
 export interface BulletinValidationErrors {
   nome?: string;
   email?: string;
@@ -230,9 +172,6 @@ export interface BulletinValidationErrors {
   imagemUrl?: string;
 }
 
-/**
- * Contexto de boletim para componentes React
- */
 export interface BulletinContextType {
   bulletins: CitizenBulletin[];
   loading: boolean;
